@@ -7,32 +7,29 @@ alwaysApply: true
 # Content Style Guide
 
 ## Writing Principles
+Audience
+- Write for smart hackers just starting their journey. 
 
-**Tone & Language:**
-- Use simple, concise English
-- Write for students learning new concepts
-- Be encouraging and supportive
-- Keep explanations clear and approachable
+Tone & Language:
+- Speak like a human, not a corporate doc.
+- Be bold, witty, and slightly rebellious.
+- Keep sentences tight.
 
-**Formatting:**
-- Add emojis where appropriate 😊 (but don't overdo it)
+Formatting:
+- Add emojis where appropriate 😊 
 - Use markdown syntax correctly
-- Avoid excessive **bold** or *italic* emphasis
-- Break long content into digestible sections
+- Avoid **bold** or *italic* emphasis
+
 
 ## Content Structure
 
 ### Headers
+
 Use proper heading hierarchy:
-```markdown
-# Main Chapter Title (H1 - once per page)
 
 ## Major Section (H2)
-
 ### Subsection (H3)
-
 #### Minor Points (H4)
-```
 
 ### Lists
 Use lists for clarity:
@@ -42,22 +39,20 @@ Use lists for clarity:
 
 ### Code Blocks
 Always specify language for syntax highlighting:
-````markdown
+
 ```python
 def hello():
     print("Hello, world!")
 ```
-````
-
-### Emphasis Guidelines
-- **Bold** for important terms (first introduction)
-- *Italic* for emphasis or technical terms
-- `Code` for inline code, filenames, commands
 
 ## Special Components
 
-### Woz Component (Interactive Learning)
-Use for knowledge checks:
+
+### Woz Component 
+
+purpose: interactive learning and making sure student understand concepts.
+title and descirption is optional, prompt is mandatory 
+
 ```mdx
 <Woz 
 title="Recap" 
@@ -65,21 +60,6 @@ description="Make sure you really understand 🙃"
 prompt="Ask me 3 questions about this chapter to test my understanding."
 />
 ```
-
-## Content Quality
-
-**Do:**
-- Explain concepts before using technical terms
-- Use real-world examples and analogies
-- Add visual breaks with horizontal rules (`---`)
-- Test that all links work
-
-**Don't:**
-- Assume prior knowledge without context
-- Use jargon without explanation
-- Create walls of text without breaks
-- Skip important setup steps
-
 
 
 

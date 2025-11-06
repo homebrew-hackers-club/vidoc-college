@@ -1,0 +1,245 @@
+---
+title: Chapter 5 — Deployment
+description: Deploy your landing page to Vercel and share it with the world.
+---
+
+# Chapter 5 — Deployment 🚀
+
+<AiVideo 
+script="Welcome to Chapter 5—the final chapter of Module 1! This is it, the moment everything comes together. You've built a landing page, customized it, and saved it to GitHub. Now we're going to deploy it to Vercel and make it live on the internet. By the end of this chapter, you'll have a real URL that you can share with anyone, anywhere in the world. This is where your project becomes more than just code files—it becomes an actual website.
+
+Let's pause for a moment and appreciate what we're about to do. When you deploy your site, you're taking code that exists as text files on your computer or in GitHub and transforming it into something anyone can access by typing a URL into their browser. Think about it like this: Right now, your landing page is like a play script sitting in a drawer. Deployment is like putting on a performance in a theater—suddenly, anyone can come watch the show. Your code stops being just files and becomes an interactive experience that lives on the internet.
+
+We'll connect your GitHub repository to Vercel, which we set up back in Chapter 2. Vercel will automatically detect that you're using Next.js and configure everything for you. Then, we'll watch the build process happen in real-time—Vercel installing dependencies, building your code, and deploying it to their global network. This usually takes just 1-3 minutes, and it's fascinating to watch your code transform into a live website right before your eyes.
+
+Once deployment completes, you'll get your first live URL—something like hello-vybe-world.vercel.app. Click that URL, open it in a new tab, and there it is: your landing page, live on the internet! Anyone in the world can visit this URL and see what you built.
+
+Here's where Vercel really shines: every time you push changes to GitHub, Vercel will automatically detect the change, rebuild your site, and deploy the updated version. You never have to manually deploy again. By the end of this chapter, you'll have a live website, understand automatic deployments, and be ready to share your work with the world!"
+/>
+
+This is it — the moment everything comes together. You've built a landing page, customized it, and saved it to GitHub. Now we're going to deploy it to Vercel and make it live on the internet. By the end of this chapter, you'll have a real URL that you can share with anyone, anywhere in the world. This is where your project becomes more than just code files — it becomes an actual website.
+
+## What Deployment Really Means 🌍
+
+Let's pause for a moment and appreciate what we're about to do. When you deploy your site, you're taking code that exists as text files on your computer (or in GitHub) and transforming it into something anyone can access by typing a URL into their browser.
+
+Think about it like this: Right now, your landing page is like a play script sitting in a drawer. Deployment is like putting on a performance in a theater — suddenly, anyone can come watch the show. Your code stops being just files and becomes an interactive experience that lives on the internet.
+
+When someone visits your deployed URL, here's what happens:
+1. They type your URL (like `your-site.vercel.app`) into their browser
+2. Their browser requests your site from Vercel's servers
+3. Vercel's servers run your code and generate the HTML/CSS/JavaScript
+4. That generated content gets sent back to their browser
+5. Their browser displays your beautiful landing page
+
+All of this happens in milliseconds, completely automatically. Pretty incredible, right?
+
+## Connecting GitHub to Vercel 🔗
+
+Remember back in Chapter 2 when we set up Vercel? Now we're going to put it to work. The magic happens when Vercel connects to your GitHub repository.
+
+### Step 1: Start a New Project
+
+Log into your Vercel dashboard at [vercel.com](https://vercel.com). You should see a button or card that says "Add New..." or "Import Project." Click it.
+
+### Step 2: Import from GitHub
+
+Vercel will show you options for where to import from. Since your code is in GitHub, click "Import Git Repository" or look for the GitHub logo. You'll see a list of your GitHub repositories (or it might ask you to grant access first).
+
+Find your `hello-vybe-world` repository (or whatever you named it) and click "Import."
+
+### Step 3: Configure Your Project
+
+Vercel is pretty smart — it will automatically detect that you're using Next.js and configure settings for you. But let's review what you're seeing:
+
+**Project Name:** This will pre-fill with your repository name. You can change it if you want, but the default is fine.
+
+**Framework Preset:** Should say "Next.js" — this is correct! Vercel detected it automatically.
+
+**Root Directory:** Usually this is just `./` (root). Leave this as-is unless you organized your project differently.
+
+**Build Command:** Should say `next build` — perfect, don't change this.
+
+**Output Directory:** Should say `.next` — also correct.
+
+**Install Command:** Should say `npm install` or `yarn install` — either works.
+
+For your first deployment, you can pretty much accept all the defaults. Vercel is good at detecting what you need. Click "Deploy" and watch the magic happen!
+
+## Watching the Build Process ⚙️
+
+Once you click deploy, Vercel starts working. You'll see a progress screen showing:
+
+**Installing Dependencies:** Vercel is downloading all the tools your project needs (React, Next.js, Tailwind, etc.)
+
+**Building:** Vercel is compiling your code, turning your React components into website files
+
+**Deploying:** Your site is being uploaded to Vercel's global network
+
+**Complete:** Your site is live!
+
+This process usually takes 1-3 minutes. It's fascinating to watch — you're seeing your code transform into a live website in real-time. If something goes wrong (which sometimes happens!), Vercel will show you an error message. Most errors are easy to fix — maybe a typo in a file name or a missing import. Don't panic if you see an error; read the message carefully and you can usually figure out what went wrong.
+
+## Your First Live URL 🎉
+
+After the build completes, you'll see a success screen with your live URL! It will look something like:
+
+`https://hello-vybe-world-abc123.vercel.app`
+
+Or if Vercel assigned a simpler name:
+
+`https://hello-vybe-world.vercel.app`
+
+**Click that URL!** Open it in a new tab. There it is — your landing page, live on the internet. Anyone in the world can visit this URL and see what you built. Share it with friends, family, or on social media. This is a real website, and you made it!
+
+## Understanding Automatic Deployments 🔄
+
+Here's where Vercel really shines. Now that your repository is connected, every time you push changes to GitHub, Vercel will automatically:
+
+1. Detect the change
+2. Rebuild your site with the new code
+3. Deploy the updated version
+4. Update your live URL with the changes
+
+This means you never have to manually deploy again. Just commit and push to GitHub, and your site updates automatically. It's like having a personal assistant who updates your website every time you make a change.
+
+You'll see this in action if you go back to Vercel's dashboard. Every deployment shows up as a new entry with a timestamp. You can click on any deployment to see details about when it was built and what changed.
+
+## Testing Your Live Site ✅
+
+Now that your site is live, test it thoroughly:
+
+**Desktop View:**
+- Open your URL on a computer
+- Resize your browser window — does everything still look good?
+- Click all the links — do they work?
+- Scroll through all sections — is everything readable?
+
+**Mobile View:**
+- Open your URL on a phone (or use your browser's mobile view)
+- Check that text is readable
+- Make sure buttons are easy to tap
+- Verify that images and sections stack nicely
+
+**Speed Test:**
+- How fast does it load? Vercel is optimized for speed, so it should be quick
+- Try opening it from different devices or networks if possible
+
+If you notice issues, don't worry! Go back to your code, make fixes, commit and push to GitHub, and Vercel will automatically deploy the fixes. This iteration cycle — code → commit → auto-deploy — is how professional developers work.
+
+## Customizing Your Vercel URL 🎨
+
+By default, Vercel gives you a URL with a random suffix. But you can customize it! In your Vercel project settings, look for "Domains" or "Project Settings." You can change the project name, which will change your URL to something cleaner.
+
+You can also add your own custom domain (like `mywebsite.com`) if you own one, but that's optional and costs money. For now, the free Vercel URL is perfect for learning and sharing.
+
+## Understanding Deployment History 📚
+
+One of the coolest features of Vercel is deployment history. Go to your project dashboard and click on "Deployments." You'll see a list of every time your site was deployed.
+
+Each deployment shows:
+- When it was deployed
+- Which Git commit triggered it
+- Whether it was successful or failed
+- A preview URL (even old versions get their own URL!)
+
+You can click on any old deployment to see what your site looked like at that point in time. And if something breaks with a new deployment, you can instantly roll back to a previous version with one click. This safety net is incredibly valuable — it means you can experiment freely knowing you can always go back.
+
+## Sharing Your Site 🌐
+
+Now comes the fun part — sharing your work! Your site is live, which means you can:
+
+**Share the URL:** Copy your Vercel URL and send it to anyone. They can visit it from anywhere, on any device.
+
+**Add to Your Portfolio:** If you're building a portfolio (which we'll do more of in later modules), this landing page can be your first project showcase.
+
+**Get Feedback:** Share with friends or online communities. Real feedback helps you improve and teaches you what users actually care about.
+
+**Show Your Progress:** Screenshot your site and share it on social media. Documenting your learning journey is valuable and can inspire others!
+
+Remember, this is version 1.0. It doesn't need to be perfect. The fact that you built and deployed a real website is an accomplishment worth celebrating!
+
+## Common Deployment Issues and Fixes 🛠️
+
+Sometimes deployments don't go smoothly. Here are common issues and how to fix them:
+
+**Build Failed:**
+- Check the error message in Vercel — it usually tells you exactly what's wrong
+- Common causes: missing files, syntax errors, missing dependencies in `package.json`
+- Fix the issue, commit, and push again
+
+**Site Looks Broken:**
+- Check the browser console (F12 → Console tab) for errors
+- Verify all component imports are correct
+- Make sure Tailwind CSS is properly configured
+
+**Changes Not Showing:**
+- Make sure you pushed your changes to GitHub
+- Check that Vercel detected the new deployment (refresh the dashboard)
+- Hard refresh your browser (Cmd+Shift+R on Mac, Ctrl+Shift+R on Windows)
+
+**Styling Not Working:**
+- Ensure `globals.css` is imported in your layout
+- Verify Tailwind is properly configured in `tailwind.config.js`
+- Check that you're using Tailwind classes correctly
+
+Most issues are quick fixes. The error messages are usually clear, and Google is your friend if you're stuck!
+
+## What You've Accomplished 🎊
+
+Let's take a moment to appreciate what you've done:
+
+✅ You set up GitHub and learned version control basics
+✅ You connected Vercel and understood deployment
+✅ You used V0 to generate professional code
+✅ You assembled and customized a landing page
+✅ You deployed it to the internet where anyone can see it
+
+You went from zero to having a live website. That's huge! You're not just learning concepts — you're building real things that exist on the internet.
+
+## Planning Your Next Iteration 🔮
+
+Your site is live, but the journey doesn't end here. Think about what you could improve:
+
+**Content Updates:**
+- Refine your copy to be more engaging
+- Add more sections (testimonials, portfolio, blog)
+- Include real photos or graphics
+
+**Design Improvements:**
+- Experiment with different color schemes
+- Try new layouts or animations
+- Make it even more mobile-friendly
+
+**Functionality:**
+- Add a contact form
+- Include links to your social media
+- Add more interactive elements
+
+The beauty of having everything set up is that improvements are easy. Make changes, push to GitHub, and your site updates automatically. This iterative process — build, deploy, improve, repeat — is the core of web development.
+
+## Outcome Checklist ✨
+
+Before you consider Module 1 complete, make sure:
+- Your site is deployed and live on Vercel
+- You have a working URL you can share
+- You've tested it on desktop and mobile
+- You understand how automatic deployments work
+- You've shared your site with at least one person
+
+## What's Next? 🎓
+
+Congratulations! You've completed Module 1. You now know how to:
+- Set up the essential tools (GitHub, Vercel, V0)
+- Generate code with AI assistance
+- Assemble components into a complete page
+- Deploy and share your work
+
+In Module 2, we'll dive deeper into the Command Line Interface (CLI) — the text-based tool that developers use daily. You'll learn to navigate your computer, create files and folders, and run commands. This might sound technical, but it becomes second nature quickly, and it unlocks a lot of power.
+
+But for now, celebrate! You built and deployed a website. That's an achievement worth being proud of. Share it, enjoy it, and when you're ready, we'll keep building. 🚀
+
+<Woz 
+title="Celebration Time" 
+prompt="Share the link to your deployed website and describe one thing you'd like to improve in the next iteration!" 
+/>

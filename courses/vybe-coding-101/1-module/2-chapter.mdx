@@ -1,0 +1,130 @@
+---
+title: Chapter 2 — Vercel
+description: Create a Vercel account and understand what deployment means.
+---
+
+# Chapter 2 — Vercel 🚀
+
+<AiVideo 
+script="Welcome to Chapter 2! Congratulations on completing Chapter 1—you now have a GitHub account and your first repository. But here's the thing—your code is just sitting there in the cloud, waiting to come alive. In this chapter, we're going to bring it to life by learning about deployment and setting up Vercel.
+
+First, let's talk about what deployment actually means. Think of it this way: you've written a beautiful story in your notebook, and now you want to publish it so the whole world can read it. Deployment is the process of taking your code from your computer or GitHub and putting it on a server—a powerful computer that's connected to the internet 24/7—so that anyone, anywhere, can visit your website by typing in a URL.
+
+When you visit a website like google.com, your browser is connecting to Google's servers somewhere in the world. Those servers are running Google's code, which generates the page you see. When you deploy your own site, you're essentially doing the same thing—putting your code on servers that are always online and ready to serve your website to visitors.
+
+Vercel is the tool we'll use for deployment, and it's perfect for beginners. It's incredibly fast, automatically optimizes your code, and it's free for learning projects. The killer feature is that Vercel connects directly to your GitHub account. Every time you push changes to your repository, Vercel automatically builds and deploys your site again. It's like having a robot assistant that updates your website every time you make a change—no manual uploads, no complicated commands, it just works.
+
+In this chapter, we'll set up your Vercel account, connect it to GitHub, and understand how the magic of automatic deployment works. By the end, you'll have both GitHub and Vercel set up and ready to deploy your first website!"
+/>
+
+Congratulations on completing Chapter 1! You now have a GitHub account and your first repository. That's awesome, but here's the thing — your code is just sitting there in the cloud, waiting to come alive. In this chapter, we're going to bring it to life by learning about deployment and setting up Vercel, the tool that will turn your code into a real, live website.
+
+## What Is Deployment? 🌐
+
+Before we dive into Vercel, let's talk about what "deployment" actually means. Think of it this way: you've written a beautiful story (your code) in your notebook (your computer), and now you want to publish it so the whole world can read it (your live website).
+
+**Deployment** is the process of taking your code from your computer (or GitHub) and putting it on a server — a powerful computer that's connected to the internet 24/7 — so that anyone, anywhere, can visit your website by typing in a URL.
+
+Think about it like this: when you visit a website like `google.com`, your browser is connecting to Google's servers somewhere in the world. Those servers are running Google's code, which generates the page you see. When you deploy your own site, you're essentially doing the same thing — putting your code on servers that are always online and ready to serve your website to visitors.
+
+Without deployment, your code is just files sitting on your computer. With deployment, those files become a real website that works in browsers, loads fast, and can be accessed from anywhere in the world. It's the difference between writing a script and performing it on stage.
+
+## Why Vercel? ⚡
+
+There are many platforms that can deploy websites — Netlify, AWS, Heroku, and more. So why are we using Vercel? Great question!
+
+**Vercel is Built for Speed:** Vercel is specifically designed for modern web applications. It's incredibly fast, automatically optimizes your code, and serves your website from locations all around the world (called a Content Delivery Network, or CDN). This means your site loads quickly whether someone visits from New York or Tokyo.
+
+**It's Free for Beginners:** Vercel's free tier is incredibly generous. You can deploy unlimited projects, get automatic HTTPS (the secure version of HTTP), and use a custom domain. For learning and personal projects, you'll probably never need to pay.
+
+**GitHub Integration:** This is the killer feature for us. Vercel connects directly to your GitHub account. Every time you push changes to your repository, Vercel automatically builds and deploys your site again. It's like having a robot assistant that updates your website every time you make a change. No manual uploads, no complicated commands — it just works.
+
+**Made by the Creators of Next.js:** Vercel was created by the team behind Next.js (a popular web framework), so they really understand modern web development. You're using tools built by people who know what developers need.
+
+**Beautiful UI:** Let's be honest — Vercel looks good. The dashboard is clean, intuitive, and makes deploying feel less intimidating. For beginners, this matters more than you might think.
+
+## Setting Up Your Vercel Account 🔧
+
+Alright, let's get you set up! The process is smooth and should take just a couple of minutes.
+
+### Step 1: Visit Vercel
+
+Head over to [vercel.com](https://vercel.com) and look for the "Sign Up" or "Log In" button. You'll notice something interesting — Vercel offers multiple ways to sign up: with GitHub, GitLab, or Bitbucket. Since we just set up GitHub in Chapter 1, click **"Continue with GitHub"**.
+
+This is convenient because it means you don't need to create a new password or remember another set of credentials. Vercel will use your GitHub account for authentication, which also makes the integration between the two services seamless.
+
+### Step 2: Authorize Vercel
+
+When you click "Continue with GitHub," you'll be redirected to GitHub's login page (if you're not already logged in). After logging in, GitHub will ask you to authorize Vercel. This screen might look technical, but it's just GitHub asking, "Is it okay if Vercel accesses your account information and repositories?"
+
+Click "Authorize Vercel" or "Authorize application." Don't worry — you're not giving Vercel unlimited access. You can always revoke this permission later if needed.
+
+### Step 3: Complete Your Profile
+
+Once authorized, Vercel will bring you back to their site and ask you to complete your profile. This usually includes:
+- Your name (which might be pre-filled from GitHub)
+- Your email (also pre-filled)
+- Maybe a quick question about what you're planning to build
+
+Fill this out quickly — you don't need to overthink it. Vercel uses this information to personalize your experience and send you helpful tips.
+
+## Understanding the Vercel Dashboard 🎛️
+
+After signing up, you'll land on the Vercel dashboard. This is your command center for all things deployment. Let's walk through what you're looking at:
+
+**Projects:** This is where all your deployed websites will appear. Right now, it's probably empty, but by the end of this course, you'll have several projects listed here.
+
+**Domains:** Every time you deploy a project, Vercel gives you a free URL like `your-project.vercel.app`. This section lets you manage custom domains if you want to use your own domain name later (like `mywebsite.com` instead of `mywebsite.vercel.app`).
+
+**Team:** If you want to collaborate with others later, you can create teams here. For now, you can ignore this.
+
+**Settings:** This is where you manage your account, billing (if you ever upgrade), and integrations. We won't need to dive deep here for now.
+
+## The Magic of Automatic Deployment ✨
+
+Here's where Vercel really shines. When we connect your GitHub repository in the next chapter, Vercel will do something magical:
+
+1. **Watch Your Repository:** Vercel will watch your GitHub repo for changes
+2. **Detect Pushes:** Every time you push code to GitHub, Vercel automatically detects it
+3. **Build Your Site:** Vercel takes your code and builds it into a website
+4. **Deploy Instantly:** The new version goes live automatically
+5. **Give You a URL:** You get a live URL that anyone can visit
+
+This means you'll never have to manually upload files again. Just push your code to GitHub, and your website updates automatically. It's like having a live website that updates itself whenever you make changes.
+
+## Preview Deployments 🔍
+
+Here's another cool feature: Vercel creates a preview URL for every change you make, even before it goes to your main site. This means you can test changes on a separate URL, make sure everything works, and then merge them to your live site. It's like having a staging area where you can test things before showing the world.
+
+## What This Means for You 🎯
+
+By the end of this chapter, you'll have:
+- A Vercel account connected to your GitHub
+- Access to a powerful deployment platform
+- The ability to turn code into live websites
+
+You might not feel like you've done much yet — just signed up for another service. But trust me, this is a huge step. You're now equipped with professional-grade tools that real developers use every day. Vercel powers websites for companies like Netflix, GitHub, and Twitch. You're using the same infrastructure!
+
+## Common Concerns 🤔
+
+Let me address a few things you might be wondering:
+
+**"Is this really free?"** Yes! The free tier is very generous. You only pay if you need advanced features or very high traffic (which you won't for learning projects).
+
+**"What if I make a mistake?"** No worries! Vercel keeps a history of all your deployments. If something breaks, you can instantly roll back to a previous version with one click.
+
+**"Do I need to know server management?"** Nope! That's the whole point of Vercel. They handle all the complicated server stuff so you can focus on building.
+
+## What's Next? 🔜
+
+Great work! You now have both GitHub and Vercel set up. In the next chapter, we'll introduce you to V0 — a tool that uses AI to generate beautiful code. That's where things get really fun! You'll use V0 to create your landing page, then we'll connect everything together so your code flows from V0 → GitHub → Vercel → Live Website.
+
+## Outcome Checklist ✨
+
+Before moving on, make sure you have:
+- A Vercel account created
+- Your Vercel account connected to GitHub
+- You can access the Vercel dashboard
+- You understand what deployment means (making your code accessible as a live website)
+
+Ready to build something? Let's go! 🚀

@@ -1,0 +1,15 @@
+---
+alwaysApply: false
+---
+
+user is asking you add ai video component to all chapters in selected module 
+
+so what you want to do is to check what chapter is about and based on that create a 
+custom component 
+
+
+<AiVideo 
+script="So in this chapter we will learn XYZ" 
+/>
+
+that later will create an AI video where some avatar will teach users. write about 200-300 words for this script 

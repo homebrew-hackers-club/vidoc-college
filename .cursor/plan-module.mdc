@@ -1,0 +1,43 @@
+---
+alwaysApply: false
+---
+
+user is asking you to create a plan for a single module based on the course plan he already made. 
+
+he is going to show you which course is he talking and which module is the talking about and you shuold go to courses/course-name and check index file in this directory. 
+
+based on that content you want to create module directory 
+courses/course-name/module-name 
+and inside there you want to write this module plan in index.mdx file
+so for example 
+courses/course-name/module-name/index.mdx 
+
+
+this file is a cornerstone of this module and there you want to write following things:
+
+## overview
+
+Title:
+Tagline:
+Tools:
+Goal:
+
+## learning objectives
+- objective 1 
+- objective 2
+- objective 3 
+
+## chapters 
+
+#### chapter 1 - title 
+
+objectives:
+
+- objective 1
+- objective 2
+- objective 3
+
+plan 
+- explain xyz 
+- show user how to do xyz and so on
+

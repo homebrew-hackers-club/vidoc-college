@@ -1,7 +1,7 @@
 ---
 description: General rules for the college learning platform structure and content creation
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 
 # Project Structure Rules

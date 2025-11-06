@@ -1,0 +1,36 @@
+---
+alwaysApply: false
+---
+
+so user is going to ask you to create a course for him. 
+
+based on his input you want to assume some things, create a new directory with the course name and write index.mdx file
+
+this file is a cornerstone of the course and there you want to write following things:
+
+## overview
+
+Title:
+Tagline:
+Tools:
+Target Audience:
+Vibe:
+Goal:
+
+## learning objectives
+
+## course structure
+
+#### module 1 - title 
+
+objectives:
+
+- objective 1
+- objective 2
+- objective 3
+
+project:
+
+project name - build xyz
+
+(each module shuold be about building a standalone short project)

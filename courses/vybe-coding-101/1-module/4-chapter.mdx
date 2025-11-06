@@ -1,0 +1,346 @@
+---
+title: Chapter 4 — Building
+description: Assemble your landing page from sections and customize it to make it yours.
+---
+
+# Chapter 4 — Building 🏗️
+
+<AiVideo 
+script="Welcome to Chapter 4! This is where it all comes together. You've set up GitHub, connected Vercel, and generated beautiful code with V0. Now we're going to assemble everything into a complete landing page, customize it to make it yours, and prepare it for deployment. This chapter is hands-on—by the end, you'll have a real website that exists as files in your repository.
+
+So far, you've been working in separate tools: GitHub holds your repository, V0 generated some code sitting in your clipboard, and Vercel is ready to deploy but has nothing to deploy yet. In this chapter, we're going to connect all these pieces. We'll take the code V0 generated, add it to your GitHub repository, expand it into a full landing page, and customize it so it feels like yours. Think of this as taking the ingredients you've gathered and actually cooking the meal.
+
+First, we'll get your GitHub repository onto your computer using GitHub Desktop or command line. Then, we'll create the project structure—setting up folders for components and pages, creating configuration files, and organizing everything properly.
+
+Next comes the fun part: assembling your landing page. We'll take that hero section you generated in V0 and add more sections—like a features section, a call-to-action, and maybe a footer. We'll combine all these components into one cohesive page.
+
+Then, we'll customize everything to make it yours. Update the text to reflect what you want to say, adjust colors to match your style, modify spacing and layout, and add your personal touch. Don't worry about breaking anything—you can always undo changes or regenerate from V0 if needed. The best way to learn is by experimenting!
+
+Finally, we'll commit your changes to GitHub so everything is saved and ready for deployment in the next chapter. By the end of this chapter, you'll have a complete, customized landing page ready to go live!"
+/>
+
+This is where it all comes together! You've set up GitHub, connected Vercel, and generated beautiful code with V0. Now we're going to assemble everything into a complete landing page, customize it to make it yours, and prepare it for deployment. This chapter is hands-on — by the end, you'll have a real website that exists as files in your repository.
+
+## Bringing It All Together 🔗
+
+So far, you've been working in separate tools:
+- GitHub holds your repository (empty for now)
+- V0 generated some code (sitting in your clipboard or a text file)
+- Vercel is ready to deploy (but has nothing to deploy yet)
+
+In this chapter, we're going to connect all these pieces. We'll take the code V0 generated, add it to your GitHub repository, expand it into a full landing page, and customize it so it feels like yours. Think of this as taking the ingredients you've gathered and actually cooking the meal.
+
+## Understanding Project Structure 📁
+
+Before we start building, let's talk about how web projects are organized. Don't worry — it's simpler than it sounds.
+
+Most web projects follow a similar structure:
+```
+your-project/
+├── app/ (or pages/)
+│   └── page.jsx (or page.tsx)
+├── components/
+│   └── hero.jsx
+├── package.json
+└── README.md
+```
+
+**The `app/` or `pages/` folder** contains your main pages. For a simple landing page, you'll have one main page file.
+
+**The `components/` folder** holds reusable pieces — like the hero section V0 generated. This keeps your code organized.
+
+**`package.json`** is like the recipe card for your project. It lists what tools and libraries your project needs (we'll come back to this).
+
+**`README.md`** is the description file you created in Chapter 1.
+
+Don't stress about memorizing this structure right now. We'll create it step by step, and you'll naturally understand it as we go.
+
+## Setting Up Your Project Locally 💻
+
+First, we need to get your GitHub repository onto your computer. There are a couple of ways to do this:
+
+### Option 1: Clone via GitHub Desktop (Easiest)
+
+If you haven't already, download [GitHub Desktop](https://desktop.github.com) — it's a visual tool that makes Git easier for beginners. Once installed:
+1. Sign in with your GitHub account
+2. Click "Clone a repository from the Internet"
+3. Find your `hello-vybe-world` repository
+4. Choose where to save it on your computer
+5. Click "Clone"
+
+### Option 2: Clone via Command Line
+
+If you're comfortable with the command line (we'll cover this more in Module 2), you can use:
+```bash
+git clone https://github.com/yourusername/hello-vybe-world.git
+cd hello-vybe-world
+```
+
+### Option 3: Download as ZIP (Simplest, but Limited)
+
+If the above feels too complex:
+1. Go to your repository on GitHub
+2. Click the green "Code" button
+3. Click "Download ZIP"
+4. Extract the ZIP file to a folder on your computer
+
+**Note:** Option 3 is quick but makes updating harder later. Options 1 or 2 are better long-term, but Option 3 works if you want to get started immediately.
+
+## Creating Your First Files 📄
+
+Now let's create the actual files for your website. We're going to build a simple Next.js project (Next.js is a React framework that Vercel loves — it makes everything work smoothly).
+
+### Initial Project Setup
+
+If you cloned/downloaded your repo, you should see a folder with a `README.md` file. We need to add a few more files:
+
+**1. Create `package.json`**
+
+This file tells Next.js and Vercel what your project needs. Create a new file called `package.json` and add:
+
+```json
+{
+  "name": "hello-vybe-world",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "next": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5",
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8",
+    "autoprefixer": "^10.0.1"
+  }
+}
+```
+
+**2. Create the App Structure**
+
+Create a folder called `app` (if it doesn't exist), and inside it, create a file called `page.jsx` or `page.tsx`. This will be your main landing page.
+
+**3. Add Tailwind Configuration**
+
+Create `tailwind.config.js`:
+```javascript
+module.exports = {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+And `postcss.config.js`:
+```javascript
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+```
+
+**4. Add Global Styles**
+
+Create `app/globals.css`:
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+## Assembling Your Landing Page 🎨
+
+Now for the fun part — let's build your actual landing page! Remember that hero section you generated in V0? We're going to use that as a starting point.
+
+### Step 1: Create the Hero Component
+
+Create a folder called `components` and inside it, create `Hero.jsx`. Paste the code V0 generated for your hero section here. It should look something like:
+
+```jsx
+export default function Hero() {
+  return (
+    <section className="...">
+      {/* Your V0 generated code here */}
+    </section>
+  );
+}
+```
+
+### Step 2: Add More Sections
+
+A landing page needs more than just a hero. Let's add a few more sections. Use V0 to generate:
+- A features section (3-4 features with icons)
+- A call-to-action section (encouraging visitors to take action)
+- Maybe a simple footer
+
+For each section, create a new file in your `components/` folder:
+- `Features.jsx`
+- `CTA.jsx`
+- `Footer.jsx`
+
+Copy the V0-generated code into each file.
+
+### Step 3: Combine Everything
+
+Now open your `app/page.jsx` file and import all your components:
+
+```jsx
+import Hero from '@/components/Hero';
+import Features from '@/components/Features';
+import CTA from '@/components/CTA';
+import Footer from '@/components/Footer';
+
+export default function Home() {
+  return (
+    <main>
+      <Hero />
+      <Features />
+      <CTA />
+      <Footer />
+    </main>
+  );
+}
+```
+
+## Customizing Your Content ✏️
+
+Now comes the personalization part — making this landing page yours. Open each component file and start customizing:
+
+**Update Text:**
+- Change headlines to reflect what you want to say
+- Update the subheadline with your own message
+- Personalize button text and calls-to-action
+
+**Adjust Colors:**
+- Look for color classes like `bg-blue-500` and change them to colors you prefer
+- Tailwind uses a color system: `bg-[color]-[shade]`
+- Common colors: blue, purple, green, pink, indigo, etc.
+- Shades go from 50 (lightest) to 900 (darkest)
+
+**Modify Spacing:**
+- Look for classes like `py-12`, `px-6`, `space-y-4`
+- These control padding and spacing
+- Experiment with different numbers to see what looks good
+
+**Update Links:**
+- Find any placeholder URLs and replace them with real links (or remove them if not needed)
+- Update social media links if you include them
+
+Don't worry about breaking anything. You can always undo changes or regenerate from V0 if needed. The best way to learn is by experimenting!
+
+## Adding Your Own Touch 🎯
+
+Here are some ideas to make your landing page unique:
+
+**Add Your Personality:**
+- Write copy (text) that sounds like you
+- Share your real interests or goals
+- Don't be afraid to be creative or playful
+
+**Include Real Information:**
+- Add your actual email or social links
+- Use real photos if you want (you can host images on GitHub too)
+- Write genuine descriptions rather than placeholder text
+
+**Experiment with Layout:**
+- Try different arrangements of sections
+- Adjust the order: maybe CTA before features? Footer at top? Play around!
+
+**Make It Mobile-Friendly:**
+- Most V0 components are responsive by default, but resize your browser window to test
+- Make sure text is readable and buttons are clickable on small screens
+
+## Previewing Locally 🖥️
+
+Before deploying, you'll want to see your site locally. If you have Node.js installed (we'll cover this more in Module 2), you can run:
+
+```bash
+npm install
+npm run dev
+```
+
+Then open `http://localhost:3000` in your browser to see your site.
+
+If this feels too technical right now, don't worry — you can skip local preview and deploy directly to Vercel. Vercel will show you previews of your site automatically.
+
+## Committing Your Changes 💾
+
+Once you're happy with your landing page (or even if you're just ready to save progress), it's time to commit your changes to GitHub.
+
+**If using GitHub Desktop:**
+1. You'll see a list of changed files
+2. Write a commit message like "Add initial landing page components"
+3. Click "Commit to main"
+4. Click "Push origin" to upload to GitHub
+
+**If using command line:**
+```bash
+git add .
+git commit -m "Add initial landing page components"
+git push
+```
+
+**If you downloaded as ZIP:**
+You'll need to manually upload files through GitHub's web interface:
+1. Go to your repository on GitHub
+2. Click "Add file" → "Upload files"
+3. Drag your project files
+4. Write a commit message and click "Commit changes"
+
+Commit messages are like notes to your future self (and others) explaining what you changed. Keep them simple and clear: "Add hero section," "Update colors," "Fix typo in headline."
+
+## Iterating and Improving 🔄
+
+Your landing page doesn't need to be perfect on the first try. In fact, it won't be — and that's okay! The beauty of having everything set up is that you can iterate easily:
+
+1. Make changes to your files
+2. Commit and push to GitHub
+3. See the updated site (once deployed)
+
+Think of this as version 1.0. You can always come back and improve it. Add more sections, refine the copy, experiment with new designs. Every iteration teaches you something new.
+
+## Common Challenges and Solutions 🛠️
+
+**"My code looks wrong"** — Double-check that you copied everything from V0 correctly, including closing tags and brackets.
+
+**"Colors aren't showing"** — Make sure you have Tailwind properly configured and your `globals.css` imported in your layout.
+
+**"Nothing is appearing"** — Check that you're importing components correctly in your `page.jsx` file.
+
+**"I don't like how it looks"** — That's normal! Keep tweaking. Try different color combinations, spacing, or even regenerate sections in V0 with different prompts.
+
+## What's Next? 🚀
+
+Amazing work! You've built an actual landing page. You have:
+- Multiple sections assembled together
+- Customized content and styling
+- Everything committed to GitHub
+
+In the final chapter, we'll deploy this to Vercel and make it live. Your landing page will get a real URL that you can share with anyone in the world. That's when it becomes real — when it's accessible on the internet for anyone to visit.
+
+## Outcome Checklist ✨
+
+Before moving on, make sure you have:
+- All your components created and saved
+- Your main page file combining all components
+- Content customized to your liking (at least somewhat)
+- Changes committed to GitHub
+- A landing page that feels like yours (even if it's not perfect)
+
+You're almost there! One more chapter and you'll have a live website. 🎉
