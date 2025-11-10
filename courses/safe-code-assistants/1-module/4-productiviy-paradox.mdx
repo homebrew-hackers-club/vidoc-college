@@ -24,96 +24,26 @@ Let's look at what the actual research shows.
 
 ## What the Research Actually Says
 
-### The McKinsey Study: The Full Picture
+A McKinsey study found that developers could complete tasks up to twice as fast with generative AI, with documenting code functionality completed in half the time, writing new code in nearly half the time, and optimizing existing code in nearly two-thirds the time. AI excels at writing boilerplate code, creating documentation, code refactoring, translating code between languages, and setting up standard functionality. However, time savings can vary significantly based on task complexity and developer experience. Time savings shrank to less than 10 percent on tasks that developers deemed high in complexity. For developers with less than a year of experience, tasks took 7 to 10 percent longer with AI tools than without them in some cases. Why? Because junior developers spent time reviewing and correcting AI suggestions, complex tasks required developer expertise to validate outputs, AI tools provided incorrect coding recommendations and even introduced errors in the code at times, and developers had to "spoon-feed" the tool to debug code correctly.
 
-A widely cited McKinsey study found impressive productivity gains, but the full results are more nuanced than headlines suggest:
+A field experiment with 758 consultants at Boston Consulting Group examined AI performance on realistic, complex, and knowledge-intensive tasks, testing tasks both within and outside the "jagged technological frontier" of AI capabilities. Inside the frontier (tasks within AI capabilities), consultants using AI completed 12.2% more tasks on average, completed tasks 25.1% more quickly, and produced significantly higher quality results (more than 40% higher quality compared to a control group). Outside the frontier (tasks beyond AI capabilities), consultants using AI were 19 percentage points less likely to produce correct solutions compared to those without AI. This reveals a critical insight: **AI capabilities are powerful but uneven.** Some tasks that appear simple prove difficult for AI, while others that seem complex are handled well.
 
-**Simple, repetitive tasks:** Developers completed tasks **up to 2x faster** (50-100% improvement) <sup>[1](#1)</sup>
+GitHub conducted rigorous research with professional developers. In surveys, developers reported that GitHub Copilot helped them complete tasks faster, especially repetitive ones, with over 90% agreement. Between 60-75% of users reported feeling more fulfilled with their job, less frustrated when coding, and able to focus on more satisfying work. In a controlled experiment with 95 professional developers, the group using GitHub Copilot completed an HTTP server implementation task 55.8% faster than the control group (with a 95% confidence interval of 21-89% improvement). Important context: the treated group's success rate was 7 percentage points higher than the control group, but this estimate was not statistically significant. The research focused on specific, well-defined coding tasks, and long-term maintenance costs and debugging time weren't fully accounted for.
 
-Examples include:
-- Writing boilerplate code
-- Creating test fixtures
-- Generating documentation
-- Translating code between languages
-- Setting up standard API endpoints
+Experience level matters significantly. Less experienced developers, developers with heavy coding loads (more hours of coding per day), and older developers (aged 25-44) benefited more from Copilot. When comparing performance improvements, bottom-half-skill performers exhibited a 43% surge in performance, compared to 17% for top-half-skill performers when leveraging AI.
 
-**But here's the catch:**
+![Performance Gains by Skill Level](/assets/safe-productivity-perf-gain.png)
+*Performance Gains by Skill Level*
 
-**Complex projects with experienced developers:** The same study found that experienced developers working on complex tasks actually took **19% longer** when using AI tools <sup>[1](#1)</sup>
-
-Why? Because:
-- They spent time reviewing and debugging AI suggestions
-- AI-generated code was more verbose and required refactoring
-- AI introduced subtle bugs that took time to track down
-- Context switching between AI suggestions and actual requirements slowed them down
-
-### The Self-Reporting Problem
-
-Multiple studies show a concerning pattern:
-
-**Developers overestimate productivity gains by 20-24%** when self-reporting <sup>[2](#2)</sup>
-
-When developers are asked "Are you more productive with AI?", most say yes. But when researchers measure actual outcomes (time to completion, code quality, bug rates), the gains are significantly smaller or sometimes negative.
-
-This is called the **perceived productivity paradox**: tools feel faster because they reduce typing, but don't necessarily lead to better outcomes faster.
-
-### The GitHub Copilot Research
-
-GitHub's own research on Copilot showed:
-
-- **55% of developers** reported completing tasks faster <sup>[3](#3)</sup>
-- Tasks were completed **55% faster on average** in controlled studies
-- But this was measured on **specific, well-defined coding tasks**, not full feature development
-- The research didn't account for debugging time, code review time, or long-term maintenance costs
-
-### The Quality-Speed Tradeoff
-
-A Stanford/MIT study found an important tradeoff:
-
-- Developers using AI assistants **wrote code 25-30% faster**
-- But the code had **more bugs** and **worse maintainability** <sup>[4](#4)</sup>
-- When accounting for debugging and refactoring time, the net productivity gain was **much smaller** or disappeared entirely
-
-## Why Self-Reported Metrics Are Misleading
-
-Developers mistakenly believe they're more productive with AI for several psychological reasons:
-
-**1. Reduced Typing Feels Like Progress**
-
-AI tools autocomplete code rapidly. Watching lines of code appear feels productive, even if those lines need significant revision later.
-
-**It feels fast, even if the outcome isn't faster.**
-
-**2. The "Busy Work" Trap**
-
-AI excels at boilerplate code that takes time but doesn't require deep thinking. Developers feel productive knocking out this busy work quickly.
-
-But the hard parts of software development — understanding requirements, designing architecture, debugging subtle issues, optimizing performance — aren't sped up by AI.
-
-**Feeling busy isn't the same as being effective.**
-
-**3. Ignoring Downstream Costs**
-
-Self-reported productivity typically measures "time to first commit" but ignores:
-
-- Time spent in code review finding AI-generated bugs
-- Time spent debugging issues that surface in testing
-- Time spent refactoring verbose AI code
-- Time spent by other developers understanding overly complex AI code
-
-**Short-term speed can create long-term drag.**
-
-**4. The Hawthorne Effect**
-
-When developers know they're being studied or are excited about a new tool, they work harder and more carefully. This effect fades over time as the tool becomes routine.
-
-Early studies often capture this enthusiasm effect, not sustainable productivity gains.
+There's a concerning gap between perception and reality. While participants using GitHub Copilot estimated a 35% increase in productivity on average, the actual revealed productivity increase was 55.8%, suggesting developers underestimated rather than overestimated the gains. However, other research shows the opposite pattern where developers overestimate gains, particularly when measuring overall project velocity rather than specific tasks, including complex work beyond AI's capabilities, or accounting for downstream costs like debugging and refactoring.
 
 ## When AI Actually Helps: The Sweet Spot
 
-AI coding assistants genuinely boost productivity in specific scenarios:
+Based on the research, AI coding assistants genuinely boost productivity in specific scenarios:
 
 **✅ Boilerplate and Repetitive Code**
+
+Generative AI can handle routine tasks such as auto-filling standard functions used in coding, completing coding statements as the developer is typing, and documenting code functionality in a given standard format.
 
 **Use cases:**
 - CRUD operations
@@ -124,48 +54,34 @@ AI coding assistants genuinely boost productivity in specific scenarios:
 
 **Why it works:** These are pattern-matching tasks with minimal security or business logic complexity.
 
+**✅ Accelerating Updates to Existing Code**
+
+When using AI tools with effective prompting, developers could make more changes to existing code faster. For instance, to adapt code from an online coding library, developers would copy and paste it into a prompt and submit iterative queries requesting the tool to adjust based on their criteria.
+
 **✅ Learning Unfamiliar Technologies**
 
-**Use cases:**
-- "How do I use this library?"
-- "Show me an example of X in Y language"
-- "Explain what this code does"
+The technology can help developers rapidly brush up on an unfamiliar code base, language, or framework. When developers face a new challenge, they can turn to these tools to get help they might otherwise seek from an experienced colleague—explaining new concepts, synthesizing information, and providing step-by-step guides.
 
 **Why it works:** AI accelerates the learning curve by providing context-specific examples and explanations.
 
-**✅ Code Translation and Migration**
-
-**Use cases:**
-- Converting Python to JavaScript
-- Updating deprecated API calls
-- Modernizing legacy code syntax
-
-**Why it works:** Mechanical transformations with clear inputs and outputs work well for AI.
-
 **✅ Writing Tests**
+
+With the right upskilling and enterprise enablers, generative AI tools can help with code refactoring, which can enable leaders to make a dent in traditionally resource-intensive modernization efforts.
 
 **Use cases:**
 - Unit test generation
 - Test case scaffolding
 - Mock data creation
 
-**Why it works:** Tests follow predictable patterns, and AI can generate comprehensive test coverage quickly.
-
 **✅ Documentation Generation**
 
-**Use cases:**
-- API documentation
-- Code comments
-- README files
+Documenting code functionality for maintainability can be completed in half the time with generative AI tools.
 
 **Why it works:** AI can infer intent from code structure and generate readable explanations.
 
 **✅ Junior Developer Acceleration**
 
-**Use cases:**
-- Onboarding new team members
-- Helping juniors learn patterns
-- Providing instant feedback
+Consultants across the skills distribution benefited significantly from having AI augmentation, with those below the average performance threshold increasing by 43% and those above increasing by 17%.
 
 **Why it works:** Junior developers benefit most from having an "always available" assistant to answer questions and suggest approaches.
 
@@ -175,15 +91,19 @@ There are scenarios where AI coding assistants make things worse:
 
 **❌ Security-Critical Code**
 
+Research participants reported that AI tools won't know the specific needs of a given project and organization. Such knowledge is vital when coding to ensure the final software product can seamlessly integrate with other applications, meet a company's performance and security requirements, and ultimately solve end-user needs.
+
 **Why it fails:**
 - AI doesn't understand security intent
 - Missing security controls are common
-- AI reproduces vulnerable patterns
+- AI reproduces vulnerable patterns from training data
 - The stakes are too high for trial-and-error
 
 **Example:** Authentication, authorization, cryptography, payment processing, access control
 
 **❌ Complex Business Logic**
+
+AI-based tools are better suited for answering simple prompts, such as optimizing a code snippet, than complicated ones, like combining multiple frameworks with disparate code logic. To obtain a usable solution to satisfy a multifaceted requirement, developers first had to either combine the components manually or break up the code into smaller segments.
 
 **Why it fails:**
 - AI doesn't understand your business requirements
@@ -191,235 +111,106 @@ There are scenarios where AI coding assistants make things worse:
 - Domain-specific rules aren't in training data
 - Logic errors are hard to spot in generated code
 
-**Example:** Pricing algorithms, compliance rules, workflow orchestration
+**❌ Tasks Requiring Human Oversight**
 
-**❌ Performance-Critical Code**
-
-**Why it fails:**
-- AI optimizes for correctness, not efficiency
-- Generated code is often verbose
-- Algorithmic complexity issues get missed
-- Profiling and optimization require deep understanding
-
-**Example:** Database query optimization, real-time systems, high-throughput APIs
+Participant feedback signaled three areas where human oversight and involvement were crucial: examining code for bugs and errors, contributing organizational context, and navigating tricky coding requirements.
 
 **❌ Novel Architecture or Design**
 
-**Why it fails:**
+Why it fails:
 - AI suggests common patterns, not innovative solutions
 - Architectural decisions require tradeoff analysis
 - System design needs holistic thinking
 - Copy-pasting patterns doesn't create good architecture
 
-**Example:** Microservices design, database schema design, API design
+## The Hidden Costs and Realistic Expectations
 
-**❌ Debugging Complex Issues**
+Even when AI speeds up initial coding, there are hidden costs. Using AI tools did not sacrifice quality for speed when the developer and tool collaborated—code quality in relation to bugs, maintainability, and readability was marginally better in AI-assisted code. However, participant feedback indicates that developers actively iterated with the tools to achieve that quality. This highlights an important point: quality is maintained only when developers actively engage with and refine AI outputs. While subjects using AI produce ideas of higher quality, there is a marked reduction in the variability of these ideas compared to those not using AI, suggesting that while AI aids in generating superior content, it might lead to more homogenized outputs and less innovation and creative diversity in solutions.
 
-**Why it fails:**
-- AI doesn't have context about your specific system state
-- Root cause analysis requires investigation, not pattern-matching
-- AI suggestions can send you down wrong paths
-- Time spent trying AI suggestions delays actual debugging
+An immediate danger emerging from these findings is that people will stop delegating work inside the frontier to junior workers, creating long-term training deficits. When AI writes significant portions of code, developers may not fully understand what they committed, onboarding new team members is harder, and debugging is slower because no one knows how it works.
 
-**Example:** Race conditions, memory leaks, distributed systems issues
+Based on comprehensive research, here are realistic productivity expectations:
 
-## The Experience Level Factor
+**Best Case Scenario — Well-defined, routine tasks within AI's frontier:**
+- **40-55% faster** on specific coding tasks
+- **12.2% more tasks completed** overall
+- **25.1% faster** task completion
+- **40%+ higher quality** outputs (when actively refined)
 
-Productivity gains from AI vary significantly based on developer experience:
+**Mixed Workload Scenario — Combination of simple and complex tasks:**
+- **Significant gains** on boilerplate and documentation
+- **Minimal to no gain** on complex logic and architecture
+- **Potential slowdowns** when AI suggestions require extensive validation
+- **Net gain varies widely** based on task mix (5-30% overall)
 
-### Junior Developers: Biggest Gains
+**Problematic Scenario — Complex, outside-the-frontier work:**
+- **19 percentage points lower** correctness rate
+- **Faster initial work** but incorrect outcomes
+- **More time needed** to identify and fix issues
+- **Net result: Slower with worse quality**
 
-**Typical productivity improvement:** 30-50%
+## Measuring Success: Metrics and Collaboration Patterns
 
-**Why:**
-- They benefit from always-available guidance
-- AI helps them learn patterns faster
-- Reduces time stuck on syntax or basic concepts
-- Provides instant feedback without bothering senior developers
+Instead of asking "Did AI make us faster?", focus on outcomes rather than activity. Maximizing productivity gains and minimizing risks when deploying generative AI-based tools will require engineering leaders to take a structured approach that encompasses generative AI training and coaching, use case selection, workforce upskilling, and risk controls.
 
-**Risk:** Over-reliance on AI can slow skill development
+Track these key metrics: task completion rate (percentage of tasks successfully completed), quality metrics (bug rates, security vulnerabilities, code maintainability), time to value (end-to-end delivery time, not just coding time), and developer experience (developers using generative AI-based tools were more than twice as likely to report overall happiness, fulfillment, and a state of flow).
 
-### Mid-Level Developers: Moderate Gains
+Two predominant models emerged for effective AI collaboration: "Centaur" behavior (strategic division of labor between humans and AI) and "Cyborg" behavior (intricate integration where humans and AI work closely together at the subtask level). Centaurs switch between AI and human tasks based on strengths of each. Cyborgs integrate AI throughout their workflow with continuous interaction. Both approaches can be effective when used strategically.
 
-**Typical productivity improvement:** 15-30%
+## Organizational Strategy for AI Adoption
 
-**Why:**
-- They can evaluate AI suggestions effectively
-- Good at identifying when to use vs. avoid AI
-- Balance efficiency with code quality
-- Less need for learning assistance than juniors
+Based on the research findings, organizations should take a comprehensive approach. **Provide training and coaching** by including best practices and hands-on exercises for inputting natural-language prompts into the tools (prompt engineering). Workshops should equip developers with an overview of generative AI risks and best practices in reviewing AI-assisted code. For developers with less than a year of experience, research suggests a need for additional coursework in foundational programming principles to achieve the productivity gains observed among those with more experience.
 
-**Risk:** May become complacent about edge cases
+**Pursue the right use cases.** While there is tremendous industry buzz around generative AI's ability to generate new code, research shows that the technology can have impact across many common developer tasks, including refactoring existing code. Using multiple tools can be more advantageous than just one. Participants indicated that conversational AI excelled at answering questions when refactoring code, while code-specific tools excelled at writing new code. When developers used both tools within a given task, they realized an additional time improvement of 1.5 to 2.5 times.
 
-### Senior Developers: Mixed Results
+**Manage new risks.** New data, intellectual-property, and regulatory risks are emerging with generative AI-based tools. Leaders should consider potential risks such as data privacy and third-party security, legal and regulatory changes, AI behavioral vulnerabilities, ethics and reputational issues, and security vulnerabilities that can crop up in AI-generated code.
 
-**Typical productivity improvement:** 0-20% (sometimes negative)
-
-**Why:**
-- They're already fast at tasks AI accelerates
-- Spend more time on complex problems where AI struggles
-- Often find AI suggestions too basic or wrong
-- Review and refactor AI code takes significant time
-
-**Benefit:** Most effective at using AI as a tool, not a crutch
-
-## The Hidden Costs Nobody Talks About
-
-Even when AI speeds up initial coding, there are hidden costs:
-
-### Technical Debt Accumulation
-
-AI-generated code tends to be:
-- More verbose than necessary
-- Over-abstracted with unnecessary patterns
-- Less optimized for performance
-- Harder to understand six months later
-
-**Cost:** Increased maintenance burden over time
-
-### Code Review Burden
-
-Reviewing AI-generated code is harder than reviewing human code:
-- Reviewers must verify every assumption
-- Missing security controls aren't obvious
-- Logic errors are subtle
-- More time required per line of code reviewed
-
-**Cost:** Code review takes longer, or things slip through
-
-### Testing and QA Overhead
-
-AI code often has:
-- Edge cases that weren't considered
-- Assumptions that don't match requirements
-- Subtle bugs that only surface in specific conditions
-
-**Cost:** More time in QA, more bugs in production
-
-### Knowledge Transfer Issues
-
-When AI writes significant portions of code:
-- Developers may not fully understand what they committed
-- Onboarding new team members is harder
-- Debugging is slower because no one knows how it works
-- Bus factor increases (what if that developer leaves?)
-
-**Cost:** Reduced team velocity over time
-
-## Setting Realistic Expectations
-
-Based on research and real-world experience, here are realistic productivity expectations:
-
-### Best Case Scenario
-**Well-defined, routine tasks with junior/mid developers:**
-- **40-55% faster** time to first commit
-- **But:** 15-20% more time in review and testing
-- **Net gain:** 25-35% faster overall
-
-### Average Case Scenario
-**Mixed workload with experienced developers:**
-- **20-30% faster** on boilerplate tasks
-- **No gain** on complex logic and architecture
-- **10-15% slower** on debugging AI-generated bugs
-- **Net gain:** 5-15% faster overall
-
-### Worst Case Scenario
-**Complex, security-critical work with over-reliance on AI:**
-- **25-40% faster** initial coding
-- **50-100% more time** in review, testing, and fixing issues
-- **Net result:** **Slower overall** with worse quality
-
-## The Right Way to Measure Productivity
-
-Instead of asking "Did AI make us faster?", ask:
-
-### DORA Metrics (DevOps Research and Assessment)
-
-These are the gold standard for measuring software delivery performance:
-
-1. **Deployment Frequency** — How often you release to production
-2. **Lead Time for Changes** — Time from commit to deploy
-3. **Change Failure Rate** — Percentage of deployments causing issues
-4. **Time to Restore Service** — How quickly you recover from incidents
-
-**Why these matter:** They measure outcomes, not activity.
-
-### Quality Metrics
-
-Track whether AI usage correlates with:
-
-- **Bug rates** — Issues per 1000 lines of code
-- **Security vulnerabilities** — Findings from security scans
-- **Code maintainability** — Complexity metrics (cyclomatic complexity, etc.)
-- **Technical debt** — Refactoring time required
-
-**Why these matter:** Speed means nothing if quality suffers.
-
-### Developer Satisfaction vs. Actual Output
-
-Measure both:
-
-- **Developer self-assessment** — "Do you feel more productive?"
-- **Objective velocity** — Story points completed, features shipped
-- **Compare the two** — Are developers happier even if output is unchanged?
-
-**Why this matters:** Happiness is valuable even if productivity gains are modest.
+**Plan for skill shifts.** As developers' productivity increases, leaders will need to be prepared to shift staff to higher-value tasks. Baselining productivity and continuously measuring improvement can reveal new capacity as it emerges across the organization.
 
 ## The Verdict: Use AI Strategically, Not Universally
 
 The productivity paradox resolves when you understand this:
 
-**AI coding assistants are powerful tools for specific tasks, not universal productivity multipliers.**
+**AI coding assistants are powerful tools for specific tasks within their frontier, not universal productivity multipliers.**
+
+Generative AI is poised to transform software development in a way that no other tooling or process improvement has done. Using today's class of generative AI-based tools, developers can complete tasks up to two times faster—and this is just the beginning. But tooling alone is not enough to unlock the technology's full potential.
 
 The organizations seeing real productivity gains are those who:
 
 1. **Identify the sweet spot** — Use AI for boilerplate, learning, and repetitive tasks
-2. **Avoid the danger zones** — Don't use AI for security, complex logic, or architecture
-3. **Train developers** — Teach when to use, when to avoid, how to review AI code
-4. **Measure outcomes** — Track DORA metrics and quality, not self-reported feelings
-5. **Accept the tradeoffs** — Faster initial coding may come with review/testing overhead
+2. **Avoid the danger zones** — Don't use AI for security-critical code, complex business logic requiring organizational context, or novel architecture
+3. **Train developers** — Provide ongoing coaching from senior team members and community building to share practical examples and foster continuous learning
+4. **Measure outcomes** — Track task completion, quality metrics, and developer satisfaction
+5. **Accept the tradeoffs** — Understand that AI excels in some areas while struggling in others
 
 ## What's Next?
 
-We've now covered the full context:
+We've now covered the full context: why developers love AI (real productivity benefits exist for specific tasks in Chapter 1), the security risks (AI-generated code can introduce vulnerabilities in Chapter 2), why bans fail (Shadow AI makes things worse in Chapter 3), and the productivity truth (it helps within its frontier, hurts outside it in this chapter). In the next chapter, we'll shift from problems to solutions: **When AI Helps vs. When It Hurts**—a practical framework for deciding when to use AI coding assistants and when to avoid them.
 
-1. **Why developers love AI** — Real productivity benefits exist (Chapter 1)
-2. **The security risks** — 48% of AI code has vulnerabilities (Chapter 2)
-3. **Why bans fail** — Shadow AI makes things worse (Chapter 3)
-4. **The productivity truth** — It helps in specific scenarios, hurts in others (this chapter)
+Before moving on, make sure you understand these key takeaways:
 
-In the next chapter, we'll shift from problems to solutions: **When AI Helps vs. When It Hurts** — a practical framework for deciding when to use AI coding assistants and when to avoid them.
-
-## Quick Takeaways
-
-Before moving on, make sure you understand:
-
-- AI provides 2x speed on simple tasks but 19% slower on complex ones (McKinsey study)
-- Developers overestimate productivity gains by 20-24% (self-reporting bias)
-- Hidden costs include technical debt, review burden, and maintenance overhead
-- Junior developers benefit most; senior developers see mixed results
-- Best use cases: boilerplate, tests, documentation, learning
-- Worst use cases: security code, complex logic, architecture, debugging
-- Measure DORA metrics and quality, not feelings
-- Strategic use in the right scenarios is key
-
-<Woz 
-title="Apply It" 
-description="Think about your context" 
-context="Ask the user to identify 3 tasks in their workflow where AI would help and 3 where it would hurt, based on what they learned in this chapter." 
-prompt="" 
-/>
+- AI provides up to 2x speed on simple, repetitive tasks (McKinsey)
+- Time savings shrink to less than 10% on complex tasks; junior developers may take 7-10% longer
+- AI users were 19% less likely to solve problems correctly when tasks fell outside AI's frontier (Harvard)
+- GitHub Copilot users completed specific tasks 55.8% faster in controlled experiments
+- Bottom-half performers gained 43% improvement vs. 17% for top-half performers
+- Benefits include reduced cognitive load and increased job satisfaction (60-75% of users)
+- Hidden costs include reduced idea diversity and potential training deficits
+- Best use cases: boilerplate, tests, documentation, learning, code refactoring
+- Worst use cases: security-critical code, complex business logic requiring organizational context
+- Success requires training, strategic use case selection, and ongoing measurement
+- Two effective collaboration patterns emerged: "Centaur" (division of labor) and "Cyborg" (tight integration)
 
 ---
 
 ## Sources and Further Reading
 
-<a id="1">[1]</a> **McKinsey & Company (2023)** – [Unleashing developer productivity with generative AI](https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/unleashing-developer-productivity-with-generative-ai)
+<a id="1">[1]</a> **McKinsey & Company (2023)** – [Unleashing developer productivity with generative AI](https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/unleashing-developer-productivity-with-generative-ai)
 
-<a id="2">[2]</a> **Harvard Business School (2024)** – [Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of AI on Knowledge Worker Productivity and Quality](https://www.hbs.edu/faculty/Pages/item.aspx?num=64700)
+<a id="2">[2]</a> **Dell'Acqua, F., et al. (2023)** – [Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of AI on Knowledge Worker Productivity and Quality](https://www.hbs.edu/ris/Publication%20Files/24-013_d9b45b68-9e74-42d6-a1c6-c72fb70c7282.pdf), Harvard Business School Working Paper 24-013
 
-<a id="3">[3]</a> **GitHub (2022)** – [Research: quantifying GitHub Copilot's impact on developer productivity and happiness](https://github.blog/2022-09-07-research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/)
+<a id="3">[3]</a> **Kalliamvakou, E. (2022)** – [Research: quantifying GitHub Copilot's impact on developer productivity and happiness](https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/), GitHub Blog
 
-<a id="4">[4]</a> **Stanford/MIT (2024)** – [The Impact of AI on Developer Productivity: Evidence from GitHub Copilot](https://arxiv.org/abs/2302.06590)
+<a id="4">[4]</a> **Peng, S., Kalliamvakou, E., Cihon, P., & Demirer, M. (2023)** – [The Impact of AI on Developer Productivity: Evidence from GitHub Copilot](https://arxiv.org/abs/2302.06590), arXiv:2302.06590
 
-<a id="5">[5]</a> **GitLab (2024)** – [AI in DevSecOps: Measuring Real Productivity](https://about.gitlab.com/blog/2024/06/measuring-ai-productivity/)
+<a id="5">[5]</a> **GitLab (2024)** – [How AI helps DevSecOps teams improve productivity](https://about.gitlab.com/the-source/ai/how-ai-helps-devsecops-teams-improve-productivity/)
