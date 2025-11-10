@@ -33,263 +33,42 @@ Then apply the override rules:
 - Will this code be reviewed by someone senior? → AI is safer with good review
 ```
 
+<Mermaid chart={`
+graph TD
+    Start([Evaluate Task]) --> Safety{High Security Risk?}
+    Safety -->|YES| Stop[❌ Don't Use AI]
+    Safety -->|NO| Type{Task Type?}
+    Type -->|Boilerplate/Tests/Docs| Green[✅ Great for AI]
+    Type -->|Simple Logic| Yellow[🟡 Use with Review]
+    Type -->|Complex/Novel| Red[❌ Avoid AI]`} />
+
 Let's break down each dimension.
 
-## Dimension 1: Security Criticality
+## Making the Right Decision: Four Key Dimensions
 
-**Rule of thumb:** The more security-critical the code, the less you should rely on AI.
+When deciding whether to use AI for a coding task, evaluate it across four dimensions: security criticality, code complexity, developer experience level, and time pressure. Let's explore each.
 
-### 🔴 Never Use AI For:
+**Security Criticality — The more security-critical the code, the less you should rely on AI.** 🔴 **Never use AI for** authentication and authorization (login systems, password handling, token generation/validation, access control checks, permission systems) because AI frequently omits security checks or implements them incorrectly, and the cost of getting this wrong is catastrophic. Don't use AI for cryptography (encryption/decryption, key management, hashing algorithms, random number generation for security) because cryptography requires precise implementation where subtle mistakes create major vulnerabilities that are hard to detect. Avoid AI for payment processing (credit card handling, transaction logic, refund workflows, billing calculations) because financial code has strict compliance requirements (PCI-DSS) and regulatory implications that AI doesn't understand. Don't rely on AI for data privacy and compliance (GDPR/CCPA compliance code, PII handling, data retention/deletion, audit logging) because legal and regulatory requirements aren't in AI training data and mistakes can result in fines and lawsuits.
 
-**Authentication and Authorization**
-- Login systems
-- Password handling
-- Token generation/validation
-- Access control checks
-- Permission systems
+🟡 **Use AI with extreme caution for** API security (rate limiting, input validation, CORS configuration, API authentication) because while AI can scaffold these, you must verify every security control is present and correct. Be cautious with database queries (SQL queries with user input, ORM configurations, database access patterns) because SQL injection and authorization bypass risks are high—always verify parameterization and access checks. Exercise caution with session management (cookie handling, session storage, timeout logic) because AI often suggests insecure defaults and requires expert review.
 
-**Why:** AI frequently omits security checks or implements them incorrectly. The cost of getting this wrong is catastrophic.
+✅ **Generally safe to use AI for** non-sensitive CRUD operations (basic create/read/update/delete on non-sensitive data, simple data transformations) because they carry lower security risk, though they still require review for business logic correctness.
 
-**Cryptography**
-- Encryption/decryption
-- Key management
-- Hashing algorithms
-- Random number generation for security
+**Code Complexity — The more complex the logic, the worse AI performs.** ✅ **AI excels at simple, repetitive code** like boilerplate (standard API endpoints, data models/schemas, configuration files, imports and setup) because these follow predictable patterns that AI handles well. AI is great for test scaffolding (unit test structure, mock objects, test data generation, basic assertions) because tests are pattern-based and AI can generate comprehensive coverage quickly. Use AI for code transformations (language translation from Python to JavaScript, API migration from old version to new version, syntax modernization) because mechanical transformations with clear rules work well for AI. AI handles documentation (function docstrings, API documentation, README files, code comments) well because it can infer intent from code structure and generate clear explanations.
 
-**Why:** Cryptography requires precise implementation. Subtle mistakes create major vulnerabilities that are hard to detect.
+🟡 **Use AI cautiously for moderate complexity** like simple business logic (straightforward calculations, basic workflows, simple state machines) because while AI can handle simple logic, you must verify edge cases and business rules carefully. Be cautious with integration code (API client implementations, third-party library usage, SDK integrations) because AI knows common libraries but may suggest outdated or insecure patterns. Exercise care with data processing (ETL pipelines, data validation, format conversions) because while this is pattern-based work AI handles reasonably, edge cases require review.
 
-**Payment Processing**
-- Credit card handling
-- Transaction logic
-- Refund workflows
-- Billing calculations
+🔴 **Avoid AI for high complexity** including complex business logic (multi-step workflows, domain-specific rules, edge case handling, conditional complexity) because AI doesn't understand your business domain and logic errors are common and subtle. Don't rely on AI for system design and architecture (microservices design, database schema design, API design, performance optimization) because these require holistic thinking, tradeoff analysis, and domain expertise that AI lacks. Avoid AI for debugging complex issues (race conditions, memory leaks, performance bottlenecks, distributed systems problems) because debugging requires investigation and context about your specific system that AI doesn't have. Don't use AI for algorithm design (custom algorithms, performance-critical code, novel problem-solving) because AI suggests common solutions, not optimal ones, and algorithmic complexity issues get missed.
 
-**Why:** Financial code has strict compliance requirements (PCI-DSS) and regulatory implications. AI doesn't understand these constraints.
+**Developer Experience Level — Junior developers benefit most from AI but need the most oversight.** For **junior developers (0-2 years)**, AI works well for learning new libraries/frameworks, understanding code patterns, getting unstuck on syntax, and generating boilerplate quickly. However, risks include over-reliance that prevents skill development, not recognizing when AI is wrong, being less equipped to spot security issues, and shipping problematic code quickly. Mitigate these by requiring senior review on all AI-generated code, encouraging juniors to understand rather than just copy, using AI as a teaching tool not a replacement for learning, and pairing junior developers with AI-aware seniors.
 
-**Data Privacy and Compliance**
-- GDPR/CCPA compliance code
-- PII handling
-- Data retention/deletion
-- Audit logging
+For **mid-level developers (2-5 years)**, AI helps with accelerating routine tasks, exploring new technologies, generating tests, and scaffolding projects. Risks include becoming complacent about edge cases, developing false confidence, and skipping proper design thinking. Mitigate by reviewing AI code with the same rigor as human code, using AI for speed not as a substitute for thinking, and applying security checklists to AI-generated code.
 
-**Why:** Legal and regulatory requirements aren't in AI training data. Mistakes can result in fines and lawsuits.
+For **senior developers (5+ years)**, AI is useful for offloading repetitive work, rapid prototyping, code translation/migration, and documentation. However, seniors may underestimate review time needed, find AI suggestions frustrating or wrong, and spend more time correcting AI than it saves. Mitigate by using AI selectively for clear wins, skipping AI for complex tasks where you're already fast, and focusing on tasks where AI genuinely saves time.
 
-### 🟡 Use AI With Extreme Caution For:
+**Time Pressure — Tight deadlines make AI more risky, not less.** 🔴 **Avoid AI under time pressure when** you're tempted to skip review ("I'll just ship this, it looks fine"—deadline pressure reduces review rigor and AI bugs slip through), the task is high-stakes (production bug fix, critical feature for launch, security patch), or you don't have time to debug (AI-generated bugs can take longer to fix than writing from scratch, and deadline pressure makes thorough debugging harder).
 
-**API Security**
-- Rate limiting
-- Input validation
-- CORS configuration
-- API authentication
-
-**Why:** AI can scaffold these, but you must verify every security control is present and correct.
-
-**Database Queries**
-- SQL queries with user input
-- ORM configurations
-- Database access patterns
-
-**Why:** SQL injection and authorization bypass risks are high. Always verify parameterization and access checks.
-
-**Session Management**
-- Cookie handling
-- Session storage
-- Timeout logic
-
-**Why:** AI often suggests insecure defaults. Requires expert review.
-
-**✅ Generally Safe to Use AI For:**
-
-**Non-sensitive CRUD operations**
-- Basic create/read/update/delete on non-sensitive data
-- Simple data transformations
-
-**Why:** Lower security risk, but still require review for business logic correctness.
-
-## Dimension 2: Code Complexity
-
-**Rule of thumb:** The more complex the logic, the worse AI performs.
-
-**✅ AI Excels At Simple, Repetitive Code:**
-
-**Boilerplate**
-- Standard API endpoints
-- Data models/schemas
-- Configuration files
-- Imports and setup
-
-**Why:** These follow predictable patterns that AI handles well.
-
-**Test Scaffolding**
-- Unit test structure
-- Mock objects
-- Test data generation
-- Basic assertions
-
-**Why:** Tests are pattern-based and AI can generate comprehensive coverage quickly.
-
-**Code Transformations**
-- Language translation (Python → JavaScript)
-- API migration (old version → new version)
-- Syntax modernization
-
-**Why:** Mechanical transformations with clear rules work well for AI.
-
-**Documentation**
-- Function docstrings
-- API documentation
-- README files
-- Code comments
-
-**Why:** AI can infer intent from code structure and generate clear explanations.
-
-### 🟡 Use AI Cautiously For Moderate Complexity:
-
-**Business Logic (Simple)**
-- Straightforward calculations
-- Basic workflows
-- Simple state machines
-
-**Why:** AI can handle simple logic but verify edge cases and business rules carefully.
-
-**Integration Code**
-- API client implementations
-- Third-party library usage
-- SDK integrations
-
-**Why:** AI knows common libraries but may suggest outdated or insecure patterns.
-
-**Data Processing**
-- ETL pipelines
-- Data validation
-- Format conversions
-
-**Why:** Pattern-based work AI handles reasonably, but edge cases require review.
-
-### 🔴 Avoid AI For High Complexity:
-
-**Complex Business Logic**
-- Multi-step workflows
-- Domain-specific rules
-- Edge case handling
-- Conditional complexity
-
-**Why:** AI doesn't understand your business domain. Logic errors are common and subtle.
-
-**System Design and Architecture**
-- Microservices design
-- Database schema design
-- API design
-- Performance optimization
-
-**Why:** These require holistic thinking, tradeoff analysis, and domain expertise that AI lacks.
-
-**Debugging Complex Issues**
-- Race conditions
-- Memory leaks
-- Performance bottlenecks
-- Distributed systems problems
-
-**Why:** Debugging requires investigation and context about your specific system that AI doesn't have.
-
-**Algorithm Design**
-- Custom algorithms
-- Performance-critical code
-- Novel problem-solving
-
-**Why:** AI suggests common solutions, not optimal ones. Algorithmic complexity issues get missed.
-
-## Dimension 3: Developer Experience Level
-
-**Rule of thumb:** Junior developers benefit most from AI but need the most oversight.
-
-### Junior Developers (0-2 years)
-
-**✅ Good use cases:**
-- Learning new libraries/frameworks
-- Understanding code patterns
-- Getting unstuck on syntax
-- Generating boilerplate quickly
-
-**⚠️ Risks:**
-- Over-reliance prevents skill development
-- May not recognize when AI is wrong
-- Less equipped to spot security issues
-- Can ship problematic code quickly
-
-**Mitigation:**
-- Require senior review on all AI-generated code
-- Encourage juniors to understand, not just copy
-- Use AI as a teaching tool, not a replacement for learning
-- Pair junior developers with AI-aware seniors
-
-### Mid-Level Developers (2-5 years)
-
-**✅ Good use cases:**
-- Accelerating routine tasks
-- Exploring new technologies
-- Generating tests
-- Scaffolding projects
-
-**⚠️ Risks:**
-- May become complacent about edge cases
-- Can develop false confidence
-- Might skip proper design thinking
-
-**Mitigation:**
-- Review AI code with same rigor as human code
-- Use AI for speed, not as a substitute for thinking
-- Apply security checklist to AI-generated code
-
-### Senior Developers (5+ years)
-
-**✅ Good use cases:**
-- Offloading repetitive work
-- Rapid prototyping
-- Code translation/migration
-- Documentation
-
-**⚠️ Risks:**
-- May underestimate review time needed
-- Can find AI suggestions frustrating or wrong
-- Time spent correcting AI negates benefits
-
-**Mitigation:**
-- Use AI selectively for clear wins
-- Skip AI for complex tasks where you're already fast
-- Focus on tasks where AI genuinely saves time
-
-## Dimension 4: Time Pressure
-
-**Rule of thumb:** Tight deadlines make AI *more* risky, not less.
-
-### 🔴 Avoid AI Under Time Pressure When:
-
-**You're tempted to skip review**
-- "I'll just ship this, it looks fine"
-- Deadline pressure reduces review rigor
-- AI bugs slip through
-
-**The task is high-stakes**
-- Production bug fix
-- Critical feature for launch
-- Security patch
-
-**You don't have time to debug**
-- AI-generated bugs can take longer to fix than writing from scratch
-- Deadline pressure makes thorough debugging harder
-
-**✅ AI Can Help Under Time Pressure For:**
-
-**Well-understood, low-risk tasks**
-- Boilerplate that's been done many times before
-- Documentation that's overdue
-- Test coverage that needs to increase
-
-**When review is guaranteed**
-- Code will definitely be reviewed by senior developer
-- Automated security scanning is in place
-- Time is allocated for fixing issues
+✅ **AI can help under time pressure for** well-understood, low-risk tasks (boilerplate that's been done many times before, documentation that's overdue, test coverage that needs to increase) and when review is guaranteed (code will definitely be reviewed by senior developer, automated security scanning is in place, time is allocated for fixing issues).
 
 ## The AI Readiness Checklist
 
@@ -328,106 +107,31 @@ Before using AI for a task, check these boxes:
 
 **If you can't check all boxes, reconsider using AI for that task.**
 
-## Real-World Decision Examples
+## Applying the Framework: Real-World Scenarios
 
-Let's apply the framework to real scenarios:
+Let's see how the framework works in practice with five common scenarios.
 
-### Scenario 1: Building a REST API for a Todo App
+**Scenario 1: Building a REST API for a Todo App** — Create CRUD endpoints for todos (non-sensitive data). Analysis: Security-critical? 🟢 No (assuming todos aren't sensitive). Complexity? 🟢 Low (standard CRUD). Developer level? 🟢 Works for all levels. Time pressure? 🟢 AI can speed this up. **Decision: ✅ Use AI.** Let AI generate endpoint scaffolding, but review for authorization checks (users shouldn't access others' todos), verify input validation, add tests, and review before merging.
 
-**Task:** Create CRUD endpoints for todos (non-sensitive data)
+**Scenario 2: Implementing OAuth2 Login** — Add Google OAuth authentication to app. Analysis: Security-critical? 🔴 Yes (authentication). Complexity? 🟡 Moderate. Developer level? 🔴 Requires expertise. Time pressure? 🔴 Makes it worse. **Decision: ❌ Don't rely on AI.** Instead, use a vetted authentication library, follow official documentation, reference security best practices, and have security team review. (AI can help with non-security parts like UI.)
 
-**Analysis:**
-- Security-critical? 🟢 No (assuming todos aren't sensitive)
-- Complexity? 🟢 Low (standard CRUD)
-- Developer level? 🟢 Works for all levels
-- Time pressure? 🟢 AI can speed this up
+**Scenario 3: Writing Unit Tests for a Utility Function** — Create tests for a date formatting function. Analysis: Security-critical? 🟢 No. Complexity? 🟢 Low. Developer level? 🟢 Works for all. Time pressure? 🟢 AI speeds this up. **Decision: ✅ Use AI.** Let AI generate test cases, review for edge cases (timezones, leap years, null values), add any domain-specific cases AI might miss, and run tests to verify they work.
 
-**Decision: ✅ Use AI**
+**Scenario 4: Optimizing a Slow Database Query** — Fix a query that's timing out. Analysis: Security-critical? 🟡 Potentially (depends on query). Complexity? 🔴 High (performance debugging). Developer level? 🔴 Needs expertise. Time pressure? 🔴 Production issue. **Decision: ❌ Don't rely on AI.** Why? AI doesn't have context about your data, performance optimization requires profiling and analysis, AI suggestions might make things worse, and this needs expert investigation. Instead, use profiling tools, analyze query execution plan, and consider AI only for mechanical changes after you've identified the issue.
 
-**How:**
-- Let AI generate endpoint scaffolding
-- Review for authorization checks (users shouldn't access others' todos)
-- Verify input validation
-- Add tests
-- Review before merging
+**Scenario 5: Migrating Code from Python 2 to Python 3** — Update syntax and library calls. Analysis: Security-critical? 🟡 Review security changes. Complexity? 🟢 Mechanical transformation. Developer level? 🟢 Works with review. Time pressure? 🟢 AI speeds this up significantly. **Decision: ✅ Use AI.** Use AI for syntax transformation, review for deprecated security patterns, test thoroughly, and verify dependencies are updated securely.
 
-### Scenario 2: Implementing OAuth2 Login
+Here's a quick reference comparing all five scenarios:
 
-**Task:** Add Google OAuth authentication to app
+| **Scenario** | **Security** | **Complexity** | **Dev Level** | **Time Pressure** | **Decision** |
+|---|:---:|:---:|:---:|:---:|:---:|
+| Todo REST API | 🟢 Safe | 🟢 Low | 🟢 All levels | 🟢 Helps | ✅ Use AI |
+| OAuth2 Login | 🔴 Critical | 🟡 Moderate | 🔴 Expert needed | 🔴 Risky | ❌ Avoid |
+| Unit Tests | 🟢 Safe | 🟢 Low | 🟢 All levels | 🟢 Helps | ✅ Use AI |
+| DB Optimization | 🟡 Caution | 🔴 High | 🔴 Expert needed | 🔴 Risky | ❌ Avoid |
+| Python Migration | 🟡 Review | 🟢 Low | 🟢 With review | 🟢 Helps | ✅ Use AI |
 
-**Analysis:**
-- Security-critical? 🔴 Yes (authentication)
-- Complexity? 🟡 Moderate
-- Developer level? 🔴 Requires expertise
-- Time pressure? 🔴 Makes it worse
-
-**Decision: ❌ Don't rely on AI**
-
-**Alternative:**
-- Use a vetted authentication library
-- Follow official documentation
-- Reference security best practices
-- Have security team review
-- (AI can help with non-security parts like UI)
-
-### Scenario 3: Writing Unit Tests for a Utility Function
-
-**Task:** Create tests for a date formatting function
-
-**Analysis:**
-- Security-critical? 🟢 No
-- Complexity? 🟢 Low
-- Developer level? 🟢 Works for all
-- Time pressure? 🟢 AI speeds this up
-
-**Decision: ✅ Use AI**
-
-**How:**
-- Let AI generate test cases
-- Review for edge cases (timezones, leap years, null values)
-- Add any domain-specific cases AI might miss
-- Run tests to verify they work
-
-### Scenario 4: Optimizing a Slow Database Query
-
-**Task:** Fix a query that's timing out
-
-**Analysis:**
-- Security-critical? 🟡 Potentially (depends on query)
-- Complexity? 🔴 High (performance debugging)
-- Developer level? 🔴 Needs expertise
-- Time pressure? 🔴 Production issue
-
-**Decision: ❌ Don't rely on AI**
-
-**Why:**
-- AI doesn't have context about your data
-- Performance optimization requires profiling and analysis
-- AI suggestions might make things worse
-- This needs expert investigation
-
-**Alternative:**
-- Use profiling tools
-- Analyze query execution plan
-- Consider AI only for mechanical changes after you've identified the issue
-
-### Scenario 5: Migrating Code from Python 2 to Python 3
-
-**Task:** Update syntax and library calls
-
-**Analysis:**
-- Security-critical? 🟡 Review security changes
-- Complexity? 🟢 Mechanical transformation
-- Developer level? 🟢 Works with review
-- Time pressure? 🟢 AI speeds this up significantly
-
-**Decision: ✅ Use AI**
-
-**How:**
-- Use AI for syntax transformation
-- Review for deprecated security patterns
-- Test thoroughly
-- Verify dependencies are updated securely
+**Legend:** 🔴 High risk/Avoid • 🟡 Caution/Review required • 🟢 Safe/Helpful • ✅ Use AI • ❌ Don't use AI
 
 ## Creating Your Team's AI Guidelines
 
@@ -471,61 +175,14 @@ Use this template to create guidelines for your team:
 
 ## What's Next?
 
-Congratulations! You've completed Module 1: **The AI Coding Reality Check.**
+Congratulations! You've completed Module 1: **The AI Coding Reality Check.** You now understand why AI coding tools are popular, the security risks they introduce, why banning them doesn't work, when they boost productivity versus when they hurt, and how to make smart decisions about when to use them. In **Module 2**, we'll dive deeper into the security risks and how to protect your organization from AI-generated vulnerabilities.
 
-You now understand:
-- Why AI coding tools are popular
-- The security risks they introduce
-- Why banning them doesn't work
-- When they boost productivity vs. when they hurt
-- How to make smart decisions about when to use them
-
-In **Module 2**, we'll dive deeper into the security risks and how to protect your organization from AI-generated vulnerabilities.
-
-But first, let's recap everything you've learned:
-
-## Module 1 Recap
-
-**Chapter 1: The AI Coding Boom**
-- AI tools provide real productivity gains on specific tasks
-- Adoption has been explosive due to immediate value
-- This is a cultural shift, not a temporary trend
-
-**Chapter 2: The Dark Side**
-- 48% of AI-generated code contains vulnerabilities
-- 80% of developers incorrectly believe AI code is more secure
-- Six major risk categories from training data to prompt injection
-
-**Chapter 3: The Shadow AI Problem**
-- Banning AI drives usage underground
-- 60-70% of developers use unauthorized tools
-- Shadow AI eliminates visibility and control
-
-**Chapter 4: The Productivity Paradox**
-- 2x faster on simple tasks, 19% slower on complex tasks
-- Self-reported metrics overestimate gains by 20-24%
-- Hidden costs in review, testing, and maintenance
-
-**Chapter 5: When AI Helps vs. Hurts (this chapter)**
-- Decision framework based on security, complexity, experience, and time
-- Practical guidelines for different scenarios
-- Template for team AI policies
+Let's recap everything you've learned: **Chapter 1 (The AI Coding Boom)** covered how AI tools provide real productivity gains on specific tasks, adoption has been explosive due to immediate value, and this is a cultural shift, not a temporary trend. **Chapter 2 (The Dark Side)** revealed that 48% of AI-generated code contains vulnerabilities, 80% of developers incorrectly believe AI code is more secure, and there are six major risk categories from training data to prompt injection. **Chapter 3 (The Shadow AI Problem)** showed that banning AI drives usage underground, 60-70% of developers use unauthorized tools, and shadow AI eliminates visibility and control. **Chapter 4 (The Productivity Paradox)** demonstrated that AI makes you 2x faster on simple tasks but 19% slower on complex tasks, self-reported metrics overestimate gains by 20-24%, and there are hidden costs in review, testing, and maintenance. **Chapter 5 (this chapter)** provided a decision framework based on security, complexity, experience, and time, practical guidelines for different scenarios, and a template for team AI policies.
 
 <Woz 
 title="Module 1 Complete" 
 description="Test your understanding" 
-context="Ask the user 5 questions covering key concepts from Module 1 (Chapters 1-5) to ensure they've understood the material before moving to Module 2." 
-prompt="" 
+context="Ask the user 5 questions, one by one, covering key concepts from Module 1 (Chapters 1-5) to ensure they've understood the material before moving to Module 2." 
+prompt="I know everything. Ask me woz questions to test my understanding." 
 />
 
----
-
-## Sources and Further Reading
-
-<a id="1">[1]</a> **GitHub (2024)** – [Best Practices for Using GitHub Copilot](https://docs.github.com/en/copilot/using-github-copilot/best-practices-for-using-github-copilot)
-
-<a id="2">[2]</a> **OWASP (2024)** – [AI Security Best Practices for Developers](https://owasp.org/www-project-ai-security-and-privacy-guide/)
-
-<a id="3">[3]</a> **Google (2024)** – [Responsible AI Practices for Developers](https://ai.google/responsibility/responsible-ai-practices/)
-
-<a id="4">[4]</a> **Microsoft (2024)** – [Secure Coding with AI Assistants](https://learn.microsoft.com/en-us/azure/security/develop/secure-coding-with-ai)
