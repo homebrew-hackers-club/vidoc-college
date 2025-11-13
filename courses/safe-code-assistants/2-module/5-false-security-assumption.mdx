@@ -524,13 +524,13 @@ This compounds over time:
 - Month 3: 49% of codebase affected
 - Month 6: 74% of codebase affected
 
-```mermaid
+<Mermaid chart={`
 xychart-beta
     title "Vulnerability Accumulation Over Time"
     x-axis [Month 1, Month 2, Month 3, Month 4, Month 5, Month 6]
     y-axis "% of Codebase with Vulnerabilities" 0 --> 100
     line [20, 36, 49, 59, 67, 74]
-```
+`} />
 
 Within six months, the majority of your codebase contains AI-generated vulnerabilities that passed review due to false security assumptions.
 

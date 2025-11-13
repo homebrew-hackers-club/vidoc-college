@@ -566,14 +566,14 @@ Now that you know what to look for, here's how to systematically catch these iss
 
 <Mermaid chart={`
 flowchart TD
-    A["⚠️ AI-Generated Code<br/>(Potential Vulnerabilities)"]
+    A["AI-Generated Code<br/>(Potential Vulnerabilities)"]
     
-    A --> B["🛡️ Layer 1: IDE<br/>Linting • Secrets Detection • Snyk"]
-    B --> C["🛡️ Layer 2: Pre-commit<br/>Semgrep • Bandit • Git Hooks"]
-    C --> D["🛡️ Layer 3: CI/CD<br/>SAST • DAST • SCA • Gates"]
-    D --> E["🛡️ Layer 4: Code Review<br/>Human Review • Security Checklist"]
-    E --> F["🛡️ Layer 5: Production<br/>Runtime Monitoring • RASP"]
-    F --> G["✅ Secure Code in Production"]
+    A --> B["Layer 1: IDE<br/>Linting • Secrets Detection"]
+    B --> C["Layer 2: Pre-commit<br/>Git Hooks"]
+    C --> D["Layer 3: CI/CD<br/>SAST • DAST • SCA"]
+    D --> E["Layer 4: Code Review<br/>Human Review"]
+    E --> F["Layer 5: Production<br/>Runtime Monitoring"]
+    F --> G["Secure Code in Production"]
     
     style A fill:#fecaca,stroke:#dc2626,color:#7f1d1d,stroke-width:3px
     style B fill:#fef9c3,stroke:#ca8a04,color:#713f12,stroke-width:2px

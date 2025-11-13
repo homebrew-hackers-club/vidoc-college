@@ -60,29 +60,29 @@ Even when providers claim they won't use your data for training, the reality is 
 <Mermaid chart={`
 flowchart TB
     subgraph dev[" "]
-        A[👨‍💻 Developer IDE<br/>Code, API Keys, Data]
+        A[Developer IDE<br/>Code, API Keys, Data]
     end
     
     subgraph provider[" "]
-        B[☁️ AI Provider Servers]
+        B[AI Provider Servers]
     end
     
     A -->|"Prompt + Context"| B
     
     B --> C{Data Processing<br/>Decision Point}
     
-    C -->|Enterprise/API Tier<br/>With DPA/Zero-Retention| D["✅ Zero Retention<br/>(or minimal 30-day)"]
-    C -->|Free/Personal Tier<br/>No Agreement| E["🚨 Training Data<br/>(Used to improve models)"]
-    C -->|All Tiers| F["📊 Logging & Monitoring<br/>(Abuse detection)"]
+    C -->|Enterprise/API Tier<br/>With DPA/Zero-Retention| D["Zero Retention<br/>(or minimal 30-day)"]
+    C -->|Free/Personal Tier<br/>No Agreement| E["Training Data<br/>(Used to improve models)"]
+    C -->|All Tiers| F["Logging & Monitoring<br/>(Abuse detection)"]
     
-    E --> G["⚠️ Persistent Storage"]
-    F --> H["🕐 Temporary Storage"]
-    D --> I["✅ Deleted After Processing"]
+    E --> G["Persistent Storage"]
+    F --> H["Temporary Storage"]
+    D --> I["Deleted After Processing"]
     
-    G -.->|Potential Exposure| J["🚨 Model Outputs<br/>(To other users)"]
-    G -.->|Legal Request| K["⚖️ Subpoena Access"]
-    B -.->|Security Incident| L["🔓 Data Breach"]
-    B -.->|Internal| M["👥 Employee Access"]
+    G -.->|Potential Exposure| J["Model Outputs<br/>(To other users)"]
+    G -.->|Legal Request| K["Subpoena Access"]
+    B -.->|Security Incident| L["Data Breach"]
+    B -.->|Internal| M["Employee Access"]
     
     style A fill:#3b82f6,stroke:#1e40af,color:#fff
     style B fill:#f59e0b,stroke:#d97706,color:#fff
