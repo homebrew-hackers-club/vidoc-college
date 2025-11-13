@@ -28,6 +28,36 @@ Modern software development is built on dependencies. A typical web application 
 - **PyTorch supply chain attack (2022)** — Attackers uploaded a malicious dependency that exfiltrated developer credentials and secrets <sup>[5](#5)</sup>
 - **Ledger crypto wallet library (2023)** — A compromised version drained over $600,000 from user wallets within hours <sup>[6](#6)</sup>
 
+<Mermaid chart={`
+timeline
+    title Major Supply Chain Attacks on Package Ecosystems
+    
+    2018 : event-stream (npm)
+         : Bitcoin wallet stealer via compromised maintainer
+         : 💰 2M downloads/week
+         : 🔴 CRITICAL - Active malware
+    
+    2021 : UA-Parser-JS (npm)
+         : Cryptominer & password stealer via account hijack
+         : 💰 8M downloads/week
+         : 🔴 CRITICAL - Widespread infection
+    
+    2022 : PyTorch (PyPI)
+         : Credential theft via dependency confusion
+         : 💰 2,300+ downloads over holidays
+         : 🟠 HIGH - Targeted attack window
+    
+    2023 : Ledger Connect Kit (npm)
+         : Wallet drainer via compromised package
+         : 💰 $680K stolen in hours
+         : 🔴 CRITICAL - Direct financial theft
+    
+    2024 : Colorama typosquat (PyPI)
+         : Fade Stealer malware via typosquatting
+         : 💰 Thousands of downloads
+         : 🟡 MEDIUM - Ongoing threat
+`} />
+
 Now imagine an AI assistant that doesn't check whether packages are legitimate, actively maintained, or compromised. That's the environment we're operating in today.
 
 ## How AI Assistants Amplify Supply Chain Risk
@@ -197,30 +227,37 @@ Now the AI knows your internal package naming convention. If that context is use
 
 When you install a package, you also install all of *its* dependencies, and all of *their* dependencies, recursively. This creates a massive, often invisible attack surface.
 
-**Example — Express.js dependency tree:**
+<Mermaid chart={`
+graph TD
+    A["express v5.1.0<br/>1 package installed"]
+    
+    A --> B1[qs]
+    A --> B2[body-parser]
+    A --> B3[send]
+    A --> B4[router]
+    A --> B5["+ 23 more direct deps"]
+    
+    B1 --> C1["~20 transitive deps"]
+    B2 --> C2["~9 transitive deps"]
+    B3 --> C3["~8 transitive deps"]
+    B4 --> C4["~4 transitive deps"]
+    B5 --> C5["~28 transitive deps"]
+    
+    style A fill:#bfdbfe,stroke:#3b82f6,color:#1e3a8a,stroke-width:3px
+    style B1 fill:#fed7aa,stroke:#f59e0b,color:#78350f,stroke-width:2px
+    style B2 fill:#ddd6fe,stroke:#7c3aed,color:#4c1d95,stroke-width:2px
+    style B3 fill:#ddd6fe,stroke:#7c3aed,color:#4c1d95,stroke-width:2px
+    style B4 fill:#ddd6fe,stroke:#7c3aed,color:#4c1d95,stroke-width:2px
+    style B5 fill:#e0e7ff,stroke:#818cf8,color:#3730a3
+    
+    style C1 fill:#fecaca,stroke:#dc2626,color:#7f1d1d
+    style C2 fill:#d1fae5,stroke:#10b981,color:#064e3b
+    style C3 fill:#d1fae5,stroke:#10b981,color:#064e3b
+    style C4 fill:#d1fae5,stroke:#10b981,color:#064e3b
+    style C5 fill:#e0e7ff,stroke:#818cf8,color:#3730a3
+`} />
 
-```bash
-npm install express
-# This installs 68 packages, including:
-- body-parser
-  - bytes
-  - content-type
-  - depd
-  - http-errors
-    - inherits
-    - setprototypeof
-    - statuses
-    - toidentifier
-  - iconv-lite
-    - safer-buffer
-  - on-finished
-    - ee-first
-  - qs
-  - raw-body
-    # ... and 40+ more
-```
-
-**The risk:** Even if `express` itself is trustworthy, any of those 68 packages could be compromised. The `event-stream` attack happened through a transitive dependency — most developers didn't even know they were using it <sup>[3](#3)</sup>.
+**The risk:** Even if `express` itself is trustworthy, any of those additional packages could be compromised. The `event-stream` attack happened through a transitive dependency — most developers didn't even know they were using it <sup>[3](#3)</sup>.
 
 **AI assistants don't understand transitive dependencies.** When they suggest installing a package, they're not accounting for the hundreds of transitive dependencies it might pull in.
 
@@ -389,128 +426,77 @@ This is exactly what happened with the **event-stream** and **UA-Parser-JS** att
 
 ## How to Verify AI-Suggested Dependencies
 
-Before installing any package suggested by an AI assistant, follow this verification process:
+Before installing any AI-suggested package, complete these checks:
 
-**1. Verify the Package Exists and is Legitimate**
+| Step | Verification | Command/Tool | ✅ Safe | ❌ Reject |
+|:----:|--------------|--------------|---------|-----------|
+| **1** | Package exists | `npm info package-name` | Shows valid metadata | Not found |
+| **2** | Download volume | Check weekly downloads | >1,000/week | \<1,000/week ⚠️ |
+| **3** | Known vulnerabilities | `npm audit` or Snyk | No high/critical CVEs | High/Critical CVEs found |
+| **4** | Active maintenance | Last publish date | Updated within 1 year | >1 year old ⚠️ |
+| **5** | Dependency count | `npm list --all` | \<50 total packages | >50 packages ⚠️ |
+| **6** | Install scripts | Check `package.json` | None or benign | Suspicious scripts |
 
-For npm packages:
+**Decision Rules:**
+- ❌ **Any red flag** → Reject immediately, find alternative
+- ⚠️ **1-2 yellow flags** → Proceed with extra caution and monitoring
+- ✅ **All green** → Approved for installation
 
+*This 6-step checklist takes 2-3 minutes per package but prevents supply chain compromises.*
+
+### Quick Command Reference
+
+**Check package info:**
 ```bash
-# Check package metadata
+# npm
 npm info package-name
 
-# Look for:
-# - Last publish date (recent = actively maintained)
-# - Weekly download count (popular = more scrutiny)
-# - Repository URL (should link to real repo)
-# - Maintainers (should be real people/organizations)
-```
-
-For Python packages:
-
-```bash
-# Check PyPI
+# Python
 pip show package-name
 
-# Or visit PyPI directly:
-# https://pypi.org/project/package-name/
+# Or visit directly: https://www.npmjs.com/package/NAME or https://pypi.org/project/NAME
 ```
 
-**Red flags:**
-- ❌ Package published recently (< 6 months ago) but AI suggests it as "standard"
-- ❌ Very few downloads despite AI claiming it's popular
-- ❌ No GitHub repository or repo is empty/suspicious
-- ❌ Maintainer has no history or only maintains this one package
-- ❌ Package name is very similar to a popular package (typosquatting)
-
-**2. Check for Known Vulnerabilities**
-
-Use automated tools to scan for CVEs.
-
-For npm:
-
+**Scan for vulnerabilities:**
 ```bash
-# Built-in audit
+# npm
 npm audit
 
-# More detailed with npm-audit-resolver
-npx npm-audit-resolver
-```
-
-For Python:
-
-```bash
-# Using pip-audit
-pip install pip-audit
+# Python
 pip-audit
 
-# Using safety
-pip install safety
-safety check
-```
-
-For Ruby:
-
-```bash
-# Using bundler-audit
-gem install bundler-audit
+# Ruby
 bundle audit
 ```
 
 **Also check:**
 - [Snyk Vulnerability Database](https://snyk.io/vuln)
-- [National Vulnerability Database](https://nvd.nist.gov/)
 - [GitHub Advisory Database](https://github.com/advisories)
+- [National Vulnerability Database](https://nvd.nist.gov/)
 
-**3. Review Package Health and Maintenance**
-
-Use Snyk Advisor, npm trends, or libraries.io:
-
+**Advanced verification tools:**
 ```bash
-# Check npm package health
-npx npq install package-name
+# Socket.dev - Comprehensive security analysis
+npm install -g @socketsecurity/cli
+socket npm install package-name
 
-# Checks for:
-# - Age of package
-# - Last update time
-# - Number of contributors
-# - Open issues/PRs
-# - Known security issues
+# Snyk - Vulnerability scanning & monitoring
+npm install -g snyk
+snyk test
+
+# OSSF Scorecards - Security health metrics
+scorecards --repo=github.com/owner/package-name
 ```
 
-Manual checks:
-
-1. **Visit the GitHub repository**
-   - When was the last commit?
-   - Are issues being addressed?
-   - How many open security issues?
-   - Is there active maintainer communication?
-
-2. **Check the changelog**
-   - Are updates regular?
-   - Are security fixes documented?
-   - Are breaking changes handled responsibly?
-
-3. **Review dependencies**
-   - How many dependencies does it have?
-   - Are its dependencies maintained?
-   - Any red flags in the dependency tree?
-
-**4. Examine Package Contents Before Installing**
-
-For npm:
-
+**Examine before installing:**
 ```bash
-# Download without installing
+# Download and inspect without installing
 npm pack package-name
-
-# Extract and review
 tar -xzf package-name-version.tgz
-cd package
-less package.json
+less package/package.json
 ```
 
-**Red flags in `package.json`:**
+### Red Flags in `package.json`
 
 ```json
 {
@@ -526,53 +512,7 @@ less package.json
 }
 ```
 
-**Legitimate packages rarely need install scripts.** If you see one, read it carefully.
-
-**5. Use Dependency Verification Tools**
-
-Socket.dev — Real-time security and health monitoring:
-
-```bash
-# Install Socket CLI
-npm install -g @socketsecurity/cli
-
-# Check a package before installing
-socket npm install package-name
-
-# Analyzes:
-# - Install scripts
-# - Network access
-# - Filesystem access
-# - Obfuscated code
-# - Typosquatting
-```
-
-Snyk — Comprehensive vulnerability scanning:
-
-```bash
-# Install Snyk CLI
-npm install -g snyk
-
-# Test project dependencies
-snyk test
-
-# Monitor for new vulnerabilities
-snyk monitor
-```
-
-OSSF Scorecards — Security health metrics:
-
-```bash
-# Check package security practices
-scorecards --repo=github.com/owner/package-name
-
-# Scores on:
-# - Security policy
-# - Code review practices
-# - Binary artifacts
-# - Dependency update tool
-# - CI tests
-```
+**Note:** Legitimate packages rarely need install scripts. If present, read them carefully.
 
 ## Mitigation Strategies: Securing Your Supply Chain
 

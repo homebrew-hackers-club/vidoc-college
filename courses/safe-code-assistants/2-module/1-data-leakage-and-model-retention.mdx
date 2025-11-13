@@ -57,6 +57,53 @@ Even when providers claim they won't use your data for training, the reality is 
 - **Legal and government requests** — Stored data can be subpoenaed or accessed under various legal frameworks
 - **Breach exposure** — Data stored on provider servers becomes a target for attackers <sup>[5](#5)</sup>
 
+<Mermaid chart={`
+flowchart TB
+    subgraph dev[" "]
+        A[👨‍💻 Developer IDE<br/>Code, API Keys, Data]
+    end
+    
+    subgraph provider[" "]
+        B[☁️ AI Provider Servers]
+    end
+    
+    A -->|"Prompt + Context"| B
+    
+    B --> C{Data Processing<br/>Decision Point}
+    
+    C -->|Enterprise/API Tier<br/>With DPA/Zero-Retention| D["✅ Zero Retention<br/>(or minimal 30-day)"]
+    C -->|Free/Personal Tier<br/>No Agreement| E["🚨 Training Data<br/>(Used to improve models)"]
+    C -->|All Tiers| F["📊 Logging & Monitoring<br/>(Abuse detection)"]
+    
+    E --> G["⚠️ Persistent Storage"]
+    F --> H["🕐 Temporary Storage"]
+    D --> I["✅ Deleted After Processing"]
+    
+    G -.->|Potential Exposure| J["🚨 Model Outputs<br/>(To other users)"]
+    G -.->|Legal Request| K["⚖️ Subpoena Access"]
+    B -.->|Security Incident| L["🔓 Data Breach"]
+    B -.->|Internal| M["👥 Employee Access"]
+    
+    style A fill:#3b82f6,stroke:#1e40af,color:#fff
+    style B fill:#f59e0b,stroke:#d97706,color:#fff
+    style D fill:#10b981,stroke:#059669,color:#fff
+    style E fill:#dc2626,stroke:#b91c1c,color:#fff
+    style F fill:#6b7280,stroke:#4b5563,color:#fff
+    style G fill:#dc2626,stroke:#b91c1c,color:#fff
+    style H fill:#6b7280,stroke:#4b5563,color:#fff
+    style I fill:#10b981,stroke:#059669,color:#fff
+    style J fill:#dc2626,stroke:#b91c1c,color:#fff
+    style K fill:#f59e0b,stroke:#d97706,color:#fff
+    style L fill:#dc2626,stroke:#b91c1c,color:#fff
+    style M fill:#f59e0b,stroke:#d97706,color:#fff
+    
+    style dev fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px
+    style provider fill:#fef3c7,stroke:#fbbf24,stroke-width:2px
+    
+    linkStyle 0 stroke:#f59e0b,stroke-width:3px
+    linkStyle 1,2,3,4 stroke:#6b7280,stroke-width:2px
+`} />
+
 ## How Data Leakage Happens: Five Common Attack Vectors
 
 Let's explore the most common ways sensitive information leaves your organization through AI coding assistants.
@@ -127,11 +174,16 @@ Some tools send this context to their servers to generate better suggestions. Ot
 
 **Configuration matters immensely:**
 
-- **GitHub Copilot for Business** — By default, does not retain prompts or suggestions and does not use your code for training <sup>[6](#6)</sup>
-- **GitHub Copilot Individual** — May use your code to improve the model unless you opt out
-- **Cursor** — Offers "Privacy Mode" that prevents code from being stored, but this must be explicitly enabled <sup>[7](#7)</sup>
-- **ChatGPT Free** — Conversations may be used to train models unless you opt out
-- **ChatGPT Enterprise** — Does not use your data for training and offers enhanced data controls <sup>[8](#8)</sup>
+The difference between personal/free tiers and enterprise/business tiers is significant:
+
+- **Personal/Free tiers** — Typically retain data for model improvement unless you explicitly opt out; may have 30+ day retention periods
+- **Enterprise/Business tiers** — Usually offer zero-retention options, no-training commitments, and configurable data controls
+
+**Baseline settings to verify:**
+- Does the tool retain prompts/suggestions by default?
+- Is there an explicit no-training commitment in writing?
+- Can you configure privacy modes or zero-retention?
+- What are the data retention periods?
 
 The problem? Most developers use personal accounts with default settings, not enterprise tiers with data protection guarantees.
 
@@ -224,22 +276,20 @@ Logs typically retain less information than full retention, but they can still e
 
 The biggest factor in data handling is which tier of service you're using. The difference between personal and enterprise accounts is enormous:
 
-**Personal/Free Tiers (⚠️ High Risk):**
+| Feature | 🆓 Free/Personal | 💼 Team/Business | 🏢 Enterprise |
+|---------|:----------------:|:----------------:|:-------------:|
+| **Data Retention** | 🔴 Indefinite<br/>(unless opt-out) | 🟡 30-90 days | 🟢 Zero or minimal<br/>(30 days max) |
+| **Training Usage** | 🔴 Yes<br/>(opt-out required) | 🟡 No<br/>(by default) | 🟢 Never<br/>(contractual guarantee) |
+| **DPA/SCCs** | 🔴 None | 🟡 Limited<br/>(basic terms) | 🟢 Full DPA<br/>(GDPR compliant) |
+| **Compliance** | 🔴 None | 🟡 SOC 2 | 🟢 SOC 2, ISO 27001<br/>HIPAA BAA available |
+| **Context Filtering** | 🔴 None | 🟡 Basic<br/>(manual config) | 🟢 Advanced<br/>(automated PII detection) |
+| **Audit Logs** | 🔴 None | 🟡 Limited | 🟢 Comprehensive<br/>(exportable) |
+| **Support** | 🔴 Community | 🟡 Email | 🟢 Dedicated + SLA |
+| **Cost** | Free-$20/month | $25-40/user/month | $30-60/user/month |
 
-- **OpenAI ChatGPT Free** — Conversations may be used to train models unless you opt out in settings; 30-day retention by default
-- **GitHub Copilot Individual** — Your code snippets may be used to improve the product unless you explicitly disable suggestion matching
-- **Claude Free** — Conversations may be used for training; you must opt out manually
-- **Google Bard/Gemini Free** — Similar training and retention policies apply
+**🚨 Critical Difference:** The $10-40/month cost difference may seem small, but the data protection guarantees are fundamentally different. Free tiers treat your data as training material; enterprise tiers provide contractual commitments and compliance features.
 
-**Enterprise/Business Tiers (✅ Much Safer):**
-
-- **OpenAI ChatGPT Enterprise** — Zero data retention for training; 30-day retention for abuse monitoring only; can be reduced to zero with custom agreements <sup>[8](#8)</sup>
-- **GitHub Copilot Business** — No training on your code; no retention of prompts or suggestions; telemetry is limited <sup>[6](#6)</sup>
-- **Anthropic Claude for Enterprise** — No training on customer data; configurable retention policies
-- **Azure OpenAI Service** — Customer data is not used to train models; data residency options available <sup>[10](#10)</sup>
-- **AWS Bedrock** — No training on customer prompts or outputs; data stays within your AWS environment <sup>[11](#11)</sup>
-
-The cost difference between personal ($20/month) and enterprise ($30-60/user/month) seems small, but the data protection guarantees are fundamentally different.
+**Key Takeaway:** Always use enterprise/business tiers with explicit no-training commitments and DPAs. Personal accounts should be blocked for work-related coding.
 
 ### What to Verify Before Approving a Tool
 

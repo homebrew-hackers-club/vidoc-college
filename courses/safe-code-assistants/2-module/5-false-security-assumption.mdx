@@ -8,6 +8,8 @@ This chapter examines the psychological and organizational factors that create a
 
 ## The Trust Paradox
 
+![The Trust Paradox](/assets/safe-false-security.png)
+
 Here's the uncomfortable reality: AI coding assistants simultaneously make developers feel *more confident* about security while producing code that is *less secure*.
 
 Research shows a clear pattern:
@@ -134,7 +136,7 @@ def get_user(user_id: int) -> Optional[User]:
     except Exception as e:
         logger.error(f"Error fetching user {user_id}: {e}")
         return None
-    ```
+```
 
 Reviewer thinking: "This looks good. Type hints, docstring, error handling, logging. Looks like someone put thought into this. Approved."
 
@@ -174,6 +176,9 @@ Sprint retrospective:
 - Security implications aren't visible until much later (if at all)
 
 This creates a race-to-the-bottom dynamic where thorough security review is penalized by velocity metrics.
+
+![False Security Assumptions](/assets/safe-false-security-2.png)
+
 
 ## The False Security Effect in Action: Three Real Scenarios
 
@@ -518,6 +523,14 @@ This compounds over time:
 - Month 2: Another 20% of new code has vulnerabilities (36% of codebase affected)
 - Month 3: 49% of codebase affected
 - Month 6: 74% of codebase affected
+
+```mermaid
+xychart-beta
+    title "Vulnerability Accumulation Over Time"
+    x-axis [Month 1, Month 2, Month 3, Month 4, Month 5, Month 6]
+    y-axis "% of Codebase with Vulnerabilities" 0 --> 100
+    line [20, 36, 49, 59, 67, 74]
+```
 
 Within six months, the majority of your codebase contains AI-generated vulnerabilities that passed review due to false security assumptions.
 

@@ -36,6 +36,23 @@ This creates a perfect storm: vulnerable code being generated at scale and accep
 
 Let's explore the most common security vulnerabilities that appear in AI-generated code, with real examples and fixes.
 
+### Vulnerability Overview
+
+| Rank | Vulnerability | Severity | Why AI Generates This |
+|:----:|---------------|:--------:|----------------------|
+| 🥇 | **SQL Injection** | 🔴 CRITICAL | String-building for queries is ubiquitous in training data |
+| 🥈 | **Missing Auth/Authz** | 🔴 CRITICAL | Prompts focus on functionality, not security boundaries |
+| 🥉 | **Command Injection** | 🟠 HIGH | Training examples interpolate input into shell commands |
+| 4 | **Path Traversal** | 🟠 HIGH | File operations rarely include validation in examples |
+| 5 | **Insecure Deserialization** | 🟠 HIGH | Security implications aren't obvious in library examples |
+| 6 | **Missing Input Validation** | 🟠 HIGH | AI focuses on "happy path" logic |
+| 7 | **Cross-Site Scripting (XSS)** | 🟡 MEDIUM | Output encoding often omitted in templates |
+| 8 | **Weak Cryptography** | 🟡 MEDIUM | Training data includes outdated algorithms |
+| 9 | **Hardcoded Secrets** | 🟡 MEDIUM | Fake examples in training look like real patterns |
+| 10 | **Poor Error Handling** | 🔵 LOW | "Happy path" bias omits edge cases |
+
+**Key Finding:** Research shows SQL injection and path traversal are the most frequently occurring vulnerabilities in AI-generated code, with authentication/authorization issues close behind <sup>[1](#1)</sup>.
+
 ### 1. SQL Injection (Most Common)
 
 *Why this happens:* String‑building for queries is ubiquitous online, so assistants reproduce it—even though parameterization is the secure default.
@@ -546,6 +563,26 @@ Secure code often relies on implicit context: middleware, frameworks, environmen
 ## How to Catch Vulnerable AI Code Before It Ships
 
 Now that you know what to look for, here's how to systematically catch these issues:
+
+<Mermaid chart={`
+flowchart TD
+    A["⚠️ AI-Generated Code<br/>(Potential Vulnerabilities)"]
+    
+    A --> B["🛡️ Layer 1: IDE<br/>Linting • Secrets Detection • Snyk"]
+    B --> C["🛡️ Layer 2: Pre-commit<br/>Semgrep • Bandit • Git Hooks"]
+    C --> D["🛡️ Layer 3: CI/CD<br/>SAST • DAST • SCA • Gates"]
+    D --> E["🛡️ Layer 4: Code Review<br/>Human Review • Security Checklist"]
+    E --> F["🛡️ Layer 5: Production<br/>Runtime Monitoring • RASP"]
+    F --> G["✅ Secure Code in Production"]
+    
+    style A fill:#fecaca,stroke:#dc2626,color:#7f1d1d,stroke-width:3px
+    style B fill:#fef9c3,stroke:#ca8a04,color:#713f12,stroke-width:2px
+    style C fill:#fef08a,stroke:#ca8a04,color:#713f12,stroke-width:2px
+    style D fill:#d9f99d,stroke:#65a30d,color:#365314,stroke-width:2px
+    style E fill:#bbf7d0,stroke:#16a34a,color:#14532d,stroke-width:2px
+    style F fill:#a7f3d0,stroke:#059669,color:#064e3b,stroke-width:2px
+    style G fill:#86efac,stroke:#059669,color:#064e3b,stroke-width:3px
+`} />
 
 ### 1. Code Review Checklist for AI-Generated Code
 
