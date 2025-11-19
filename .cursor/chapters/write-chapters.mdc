@@ -15,3 +15,8 @@ this shuold be a longer form content writen like a human being blogpost not a pl
 
 write around 500 words per chapter 
 
+use our custom component woz so user can ask questions directly to our AI tutor 
+
+<Woz 
+prompt="Explain GitHub in one sentence and paste the link to your new repository." 
+/>

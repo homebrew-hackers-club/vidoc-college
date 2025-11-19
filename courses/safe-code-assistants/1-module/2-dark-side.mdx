@@ -2,6 +2,10 @@
 title: The Dark Side - Security Reality Check
 ---
 
+<AiVideo
+  script="AI coding assistants feel magical until you zoom in on what they are actually doing. They are not security experts; they are pattern matchers trained on huge piles of public code, including plenty of vulnerable examples. When you ask for a SQL query, they may happily generate a version that is wide open to injection because that is what they saw most often. When you request an API endpoint, you might get something that works but quietly skips authentication, authorization, validation, and safe defaults. The scary part is that research shows a large share of AI generated code samples contain real vulnerabilities, while many developers believe this code is more secure than what they would have written themselves. That false confidence is dangerous. On top of that, assistants can suggest outdated or vulnerable libraries, introduce license and IP contamination, and even be steered by prompt injection tricks hidden in code comments or dependencies. None of this means you should abandon AI, but it does mean you have to treat its output like untrusted code from a very fast junior developer. You still need guardrails like linting, SAST, dependency scanning, strong review, and clear prompts that explicitly ask for security controls. Remember these takeaways: AI learns from insecure code, often omits security intent, can bring risky dependencies and IP issues, and must always be wrapped in real oversight and defense in depth."
+/>
+
 While AI coding assistants offer incredible benefits, they also introduce serious security risks that most teams aren't prepared for. The same factors that make these tools powerful — training on massive public codebases, generating code without human oversight, operating at speed — also make them dangerous when used without proper guardrails.
 
 Let's dive into what can go wrong.

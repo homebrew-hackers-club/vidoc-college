@@ -2,14 +2,34 @@
 alwaysApply: false
 ---
 
-user is asking you add ai video component to all chapters in selected module 
+When the user provides a chapter or mulitple chapters, generate an <AiVideo /> component based on that chapter’s content.
 
-so what you want to do is to check what chapter is about and based on that create a 
-custom component 
+The component must follow this format exactly:
 
-
-<AiVideo 
-script="So in this chapter we will learn XYZ" 
+<AiVideo
+  script="<GENERATED_SCRIPT>"
 />
 
-that later will create an AI video where some avatar will teach users. write about 200-300 words for this script 
+Where <GENERATED_SCRIPT> is a spoken-style teaching script designed for an AI avatar.
+
+Requirements for <GENERATED_SCRIPT>:
+- It must be written as natural spoken narration, not as an article or essay.
+- Sentences should be short, clear, and conversational.
+- Focus on explaining the chapter’s key ideas in a simple, engaging way.
+- Do NOT repeat or copy the chapter text. Transform it into a clean narrative.
+- Use a friendly, confident instructor tone (educational, but not overly formal).
+- Include brief examples or analogies when helpful.
+- Include smooth transitions between sections to create a coherent story.
+- End with 2–3 key takeaways summarizing the chapter.
+- The entire script should feel like a 1–3 minute educational video.
+- Script must contain plain text only — no markdown, no formatting, no quotes around paragraphs.
+- Keep it around 200-300 words
+- Always put the video in the beginng of the file after frontmatter 
+- Don't start with "in this video" or "in this chapter" just go streight to the point
+
+Purpose of the video:
+- Help the learner quickly understand the chapter's main ideas.
+- Deliver a clear, engaging explanation of the content.
+- Prepare the learner for upcoming chapters by connecting ideas smoothly.
+- Provide a concise, instructor-style presentation suitable for an AI avatar.
+
