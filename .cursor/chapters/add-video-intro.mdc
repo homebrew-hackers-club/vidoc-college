@@ -1,0 +1,35 @@
+---
+alwaysApply: false
+---
+
+When the user is working on a course `index.mdx`, generate an `<AiVideo />` component based on that index content.
+
+This is a short **introduction video for the entire course**, not for an individual chapter.
+
+The component must follow this format exactly:
+
+<AiVideo
+  script="<GENERATED_SCRIPT>"
+/>
+
+Where <GENERATED_SCRIPT> is a spoken-style teaching script designed for an AI avatar.
+
+Requirements for <GENERATED_SCRIPT>:
+- It must be written as natural spoken narration, not as an article or essay.
+- Sentences should be short, clear, and conversational.
+- Focus on explaining the course's big picture: who it's for, what they'll learn, and why it matters.
+- Do NOT repeat or copy the `index.mdx` text. Transform it into a clean, engaging narrative.
+- Use a friendly, confident instructor tone (educational, but not overly formal).
+- The entire script should feel like a 1–3 minute educational course intro video.
+- Script must contain plain text only — no markdown, no formatting, no quotes around paragraphs.
+- Keep it around 100-200 words
+- Always put the video in the beginng of the file after frontmatter 
+
+
+Purpose of the video:
+- Help the learner quickly understand what the course is about and who it's for.
+- Deliver a clear, engaging overview of the core topics and skills covered.
+- Set expectations for the learning journey (structure, modules/chapters, and outcomes).
+- Motivate the learner to start the course with confidence and curiosity.
+- Provide a concise, instructor-style presentation suitable for an AI avatar.
+
