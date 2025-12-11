@@ -1,9 +1,11 @@
 ---
-title: "Securing AI-Generated Code: A Practical Guide"
-description: "Learn how to identify and mitigate security risks in code produced by AI tools like GitHub Copilot and ChatGPT."
+title: 'Securing AI-Generated Code: A Practical Guide'
+description: >-
+  Learn how to identify and mitigate security risks in code produced by AI tools
+  like GitHub Copilot and ChatGPT.
 ---
 
-<AiVideo script="Hi there! Welcome to this practical guide on securing AI-generated code. As developers increasingly rely on AI tools like GitHub Copilot and ChatGPT to boost productivity, we're facing a new challenge: these tools can introduce unique security vulnerabilities into our codebases. Today, we'll explore why AI-generated code presents distinct security risks compared to human-written code. You'll learn how AI models can accidentally produce insecure patterns, outdated libraries, or vulnerable code snippets based on their training data. We'll dive into real-time vulnerability detection techniques that catch these issues as they're introduced, rather than weeks or months later. You'll discover how context-aware prioritization helps you focus on the vulnerabilities that actually matter to your business, reducing noise and manual validation work. We'll also cover practical strategies for integrating AI code security into your existing DevSecOps pipelines without disrupting developer workflows. Whether you're a security engineer concerned about AI-generated vulnerabilities or a development team lead looking to maintain code quality while using AI assistants, this guide has you covered. By the end, you'll have actionable strategies to embrace AI-powered development while keeping your applications secure. Ready to learn how to code confidently with AI? Let's dive in, and make sure to read through the detailed content below to master these essential security practices!" />
+<AiVideo script="Hi there! Welcome to this practical guide on securing AI-generated code. As developers increasingly rely on AI tools like GitHub Copilot and ChatGPT to boost productivity, we're facing a new challenge: these tools can introduce unique security vulnerabilities into our codebases. Today, we'll explore why AI-generated code presents distinct security risks compared to human-written code. You'll learn how AI models can accidentally produce insecure patterns, outdated libraries, or vulnerable code snippets based on their training data. We'll dive into real-time vulnerability detection techniques that catch these issues as they're introduced, rather than weeks or months later. You'll discover how context-aware prioritization helps you focus on the vulnerabilities that actually matter to your business, reducing noise and manual validation work. We'll also cover practical strategies for integrating AI code security into your existing DevSecOps pipelines without disrupting developer workflows. Whether you're a security engineer concerned about AI-generated vulnerabilities or a development team lead looking to maintain code quality while using AI assistants, this guide has you covered. By the end, you'll have actionable strategies to embrace AI-powered development while keeping your applications secure. Ready to learn how to code confidently with AI? Let's dive in, and make sure to read through the detailed content below to master these essential security practices!" id="f4d7ac3bf3f44ee334b4c2e9a119fdf631250e88bf9d39ef20bdbbf7b1ebd423" />
 
 AI code generation tools are transforming software development, but they're also introducing new security challenges that traditional tools weren't designed to handle. This guide will help you understand and mitigate these risks effectively.
 
@@ -21,19 +23,15 @@ AI tools like GitHub Copilot and ChatGPT have become invaluable coding companion
 
 AI-generated code often exhibits specific security weaknesses:
 
-- **Insecure authentication implementations**: AI might suggest basic authentication without proper password hashing or session management
-- **SQL injection vulnerabilities**: Generated database queries may lack proper parameterization
-- **Hardcoded secrets**: AI tools sometimes include example API keys or credentials that developers forget to replace
-- **Outdated dependencies**: Suggestions may reference older library versions with known vulnerabilities
-- **Missing input validation**: Generated code often assumes inputs are safe without proper sanitization
+* **Insecure authentication implementations**: AI might suggest basic authentication without proper password hashing or session management
+* **SQL injection vulnerabilities**: Generated database queries may lack proper parameterization
+* **Hardcoded secrets**: AI tools sometimes include example API keys or credentials that developers forget to replace
+* **Outdated dependencies**: Suggestions may reference older library versions with known vulnerabilities
+* **Missing input validation**: Generated code often assumes inputs are safe without proper sanitization
 
 According to industry research, 93% of businesses anticipate daily AI-driven attacks, making this an urgent priority rather than a future concern.
 
-<Woz 
-  title="Security Risk Check" 
-  description="Test your understanding of AI code risks 🎯" 
-  prompt="Ask me 2 questions about the unique security vulnerabilities in AI-generated code and why they differ from human-written code vulnerabilities."
-/>
+<Woz title="Security Risk Check" description="Test your understanding of AI code risks 🎯" prompt="Ask me 2 questions about the unique security vulnerabilities in AI-generated code and why they differ from human-written code vulnerabilities." />
 
 ## Implementing Real-Time Vulnerability Detection ⚡
 
@@ -95,11 +93,7 @@ def get_user(username):
     return db.execute(query, (username,))
 ```
 
-<Woz 
-  title="Real-Time Detection Practice" 
-  description="Solidify your understanding 🛠️" 
-  prompt="Give me a scenario with AI-generated code that has a security vulnerability. Then ask me to identify it and explain how real-time detection would catch it."
-/>
+<Woz title="Real-Time Detection Practice" description="Solidify your understanding 🛠️" prompt="Give me a scenario with AI-generated code that has a security vulnerability. Then ask me to identify it and explain how real-time detection would catch it." />
 
 ## Context-Aware Prioritization 🎯
 
@@ -155,11 +149,7 @@ With this context, a vulnerability in `auth-service` automatically gets higher p
 
 Context-aware prioritization typically reduces critical vulnerability backlogs by 86% by eliminating false positives and deprioritizing low-impact findings. Your security team focuses on vulnerabilities that actually threaten your business.
 
-<Woz 
-  title="Prioritization Exercise" 
-  description="Apply what you've learned 📊" 
-  prompt="Present me with 3 different vulnerabilities in different services. Ask me to prioritize them based on business context and explain my reasoning."
-/>
+<Woz title="Prioritization Exercise" description="Apply what you've learned 📊" prompt="Present me with 3 different vulnerabilities in different services. Ask me to prioritize them based on business context and explain my reasoning." />
 
 ## Integrating AI Code Security into DevSecOps 🔄
 
@@ -169,10 +159,10 @@ Security can't be a bottleneck. Effective AI code security integrates seamlessly
 
 **Shift-left** means moving security checks earlier in the development lifecycle. For AI-generated code, this means security validation happens:
 
-- **During code generation**: Real-time warnings in the IDE
-- **At commit time**: Pre-commit hooks validate security before code reaches the repository
-- **In pull requests**: Automated security reviews comment on PRs with vulnerability findings
-- **During CI/CD**: Final validation before deployment
+* **During code generation**: Real-time warnings in the IDE
+* **At commit time**: Pre-commit hooks validate security before code reaches the repository
+* **In pull requests**: Automated security reviews comment on PRs with vulnerability findings
+* **During CI/CD**: Final validation before deployment
 
 ### Zero-Setup Deployment Options
 
@@ -247,9 +237,9 @@ jobs:
 
 AI code security needs to work with your architecture:
 
-- **Monorepos**: Scan entire repositories while understanding service boundaries
-- **Microservices**: Context-aware prioritization uses service relationships
-- **Monoliths**: Deep codebase understanding maps dependencies and data flows
+* **Monorepos**: Scan entire repositories while understanding service boundaries
+* **Microservices**: Context-aware prioritization uses service relationships
+* **Monoliths**: Deep codebase understanding maps dependencies and data flows
 
 ### Privacy and Compliance Considerations
 
@@ -261,11 +251,7 @@ When selecting an AI code security platform, prioritize:
 
 **Compliance support**: If you operate in regulated industries, verify the platform supports necessary compliance frameworks.
 
-<Woz 
-  title="Integration Planning" 
-  description="Plan your implementation 🏗️" 
-  prompt="Ask me about my current development workflow and CI/CD setup. Then help me identify the best points to integrate AI code security scanning."
-/>
+<Woz title="Integration Planning" description="Plan your implementation 🏗️" prompt="Ask me about my current development workflow and CI/CD setup. Then help me identify the best points to integrate AI code security scanning." />
 
 ## Best Practices and Common Pitfalls 💡
 
@@ -333,8 +319,4 @@ Remember that securing AI-generated code requires both technology and culture. T
 
 The future of secure coding involves AI tools working alongside security tools—AI for productivity, security automation for protection. Organizations that master this balance will ship faster while maintaining stronger security postures.
 
-<Woz 
-  title="Comprehensive Review" 
-  description="Make sure you've got it all! 🎓" 
-  prompt="Ask me 3 questions about this guide to test my understanding of securing AI-generated code, including real-time detection, context-aware prioritization, and DevSecOps integration."
-/>
+<Woz title="Comprehensive Review" description="Make sure you've got it all! 🎓" prompt="Ask me 3 questions about this guide to test my understanding of securing AI-generated code, including real-time detection, context-aware prioritization, and DevSecOps integration." />
