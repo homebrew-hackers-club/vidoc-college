@@ -6,10 +6,8 @@ description: >-
 banner: >-
   https://vvlp2wl4yesgvvvr.public.blob.vercel-storage.com/course/banner/50ece59e-3278-442b-a305-110dd2aff182.webp
 ---
-<AiVideo
-  script="Welcome to Safe AI Code Assistants in Production. If your team is excited about tools like GitHub Copilot, Cursor, and ChatGPT, but you are worried about security, compliance, or code quality, this course is for you. Together, we will look past the hype and dig into the real data on how AI-generated code behaves in the wild, where it helps, and where it quietly introduces risk. You will learn the main categories of threats, from data leakage and vulnerable patterns to supply chain issues and IP contamination, and how these actually show up in day to day coding. Then we will turn that understanding into action: clear usage policies, developer training, and practical guardrails built into your tooling and CI/CD. Along the way, you will see concrete examples, war stories, and rollout patterns you can copy in your own organization. By the end, you will have a realistic, battle tested approach for using AI coding assistants to move faster without sacrificing security or ownership of your code."
-/>
 
+<AiVideo script="Welcome to Safe AI Code Assistants in Production. If your team is excited about tools like GitHub Copilot, Cursor, and ChatGPT, but you are worried about security, compliance, or code quality, this course is for you. Together, we will look past the hype and dig into the real data on how AI-generated code behaves in the wild, where it helps, and where it quietly introduces risk. You will learn the main categories of threats, from data leakage and vulnerable patterns to supply chain issues and IP contamination, and how these actually show up in day to day coding. Then we will turn that understanding into action: clear usage policies, developer training, and practical guardrails built into your tooling and CI/CD. Along the way, you will see concrete examples, war stories, and rollout patterns you can copy in your own organization. By the end, you will have a realistic, battle tested approach for using AI coding assistants to move faster without sacrificing security or ownership of your code." id="87045b883630a175d49e07cf1ecb1c72b4f3614e3251a55b78c87b787e9238db" />
 
 AI coding assistants like GitHub Copilot, Cursor, and ChatGPT promise incredible productivity gains — but they also introduce serious security risks that most teams aren't prepared for. Research shows that **48% of AI-generated code contains vulnerabilities**, yet 80% of developers mistakenly believe AI code is *more* secure.
 
@@ -23,99 +21,102 @@ This course teaches engineering leaders, security teams, and developers how to e
 
 ### Module 1: The AI Coding Reality Check
 
-- The promise vs. reality: Research shows 48% of AI-generated code contains vulnerabilities
-- Why banning AI tools doesn't work (shadow AI problem)
-- The productivity paradox: Gartner predicts by 2027, 25% of software defects will stem from inadequate AI code oversight 
-- Real productivity gains: McKinsey study shows developers can complete tasks up to 2x faster on simple tasks, but experienced developers in complex projects actually took 19% longer when using AI tools
-- Understanding when AI helps vs. hurts
+* The promise vs. reality: Research shows 48% of AI-generated code contains vulnerabilities
+* Why banning AI tools doesn't work (shadow AI problem)
+* The productivity paradox: Gartner predicts by 2027, 25% of software defects will stem from inadequate AI code oversight
+* Real productivity gains: McKinsey study shows developers can complete tasks up to 2x faster on simple tasks, but experienced developers in complex projects actually took 19% longer when using AI tools
+* Understanding when AI helps vs. hurts
 
 ### Module 2: Understanding the Security Risks
 
-- Data leakage risks: How coding assistants can transmit proprietary code to third-party providers for training
-- Vulnerable code generation: AI tools trained on public code repositories reproduce vulnerable patterns without understanding security intent
-- Supply chain vulnerabilities: AI assistants may suggest deprecated or vulnerable dependencies
-- IP contamination: Risk of AI generating copyrighted code verbatim
-- The false security assumption: 80% of developers mistakenly believe AI-generated code is more secure
-- Prompt injection attacks on AI assistants (ChatGPT, Copilot, Cursor, Gemini)
+* Data leakage risks: How coding assistants can transmit proprietary code to third-party providers for training
+* Vulnerable code generation: AI tools trained on public code repositories reproduce vulnerable patterns without understanding security intent
+* Supply chain vulnerabilities: AI assistants may suggest deprecated or vulnerable dependencies
+* IP contamination: Risk of AI generating copyrighted code verbatim
+* The false security assumption: 80% of developers mistakenly believe AI-generated code is more secure
+* Prompt injection attacks on AI assistants (ChatGPT, Copilot, Cursor, Gemini)
 
 ### Module 3: Building Your AI Coding Policy
 
-- Creating usage guidelines: When AI tools are appropriate vs. prohibited
-- Approved vs. prohibited tools list
-- Cloud-based vs. self-hosted solutions (AWS Bedrock, Azure OpenAI, Google Vertex AI)
-- Data handling requirements and zero-retention guarantees
-- Security-critical code zones where AI is restricted
-- Treating AI assistants as "junior developers" - all code must be reviewed by seniors
-- Setting clear accountability: Developers own all code they commit, regardless of who/what wrote it
+* Creating usage guidelines: When AI tools are appropriate vs. prohibited
+* Approved vs. prohibited tools list
+* Cloud-based vs. self-hosted solutions (AWS Bedrock, Azure OpenAI, Google Vertex AI)
+* Data handling requirements and zero-retention guarantees
+* Security-critical code zones where AI is restricted
+* Treating AI assistants as "junior developers" - all code must be reviewed by seniors
+* Setting clear accountability: Developers own all code they commit, regardless of who/what wrote it
 
 ### Module 4: Developer Training & Enablement
 
-- Teaching secure prompting: How to guide AI with security specifications
-- Understanding AI limitations and when NOT to use it
-- How to actively iterate with AI tools to achieve quality
-- Recognizing AI-generated verbose code and increased attack vectors
-- Code review essentials for AI-generated code
-- Common AI mistakes developers must catch
+* Teaching secure prompting: How to guide AI with security specifications
+* Understanding AI limitations and when NOT to use it
+* How to actively iterate with AI tools to achieve quality
+* Recognizing AI-generated verbose code and increased attack vectors
+* Code review essentials for AI-generated code
+* Common AI mistakes developers must catch
 
 ### Module 5: Technical Controls & Guardrails
 
 **Automated Security Scanning:**
-- SAST, DAST, API Security, and SCA as foundational baseline protection
-- AI Secure Coding Assistants (ASCA) that identify insecure patterns in real-time
-- IDE scanning for instant feedback on code snippets before commit
-- Software Composition Analysis to flag vulnerable dependencies AI suggests
+
+* SAST, DAST, API Security, and SCA as foundational baseline protection
+* AI Secure Coding Assistants (ASCA) that identify insecure patterns in real-time
+* IDE scanning for instant feedback on code snippets before commit
+* Software Composition Analysis to flag vulnerable dependencies AI suggests
 
 **CI/CD Integration:**
-- Shift-left security integrated directly into pipelines
-- Security checkpoints at pull request stage (like Vorpal GitHub Action)
-- Mandatory static analysis gates
-- Ensuring every commit undergoes immediate security scanning
+
+* Shift-left security integrated directly into pipelines
+* Security checkpoints at pull request stage (like Vorpal GitHub Action)
+* Mandatory static analysis gates
+* Ensuring every commit undergoes immediate security scanning
 
 **Monitoring & Detection:**
-- Deploying agentic AI to automatically scan AI-generated code against policies and security standards
-- Tracking AI tool usage and code patterns
-- Runtime checks and compliance monitoring (OWASP, PCI-DSS, SOC2)
+
+* Deploying agentic AI to automatically scan AI-generated code against policies and security standards
+* Tracking AI tool usage and code patterns
+* Runtime checks and compliance monitoring (OWASP, PCI-DSS, SOC2)
 
 ### Module 6: Code Review Process for AI-Generated Code
 
-- Implementing secure coding practices and OWASP best practices
-- What reviewers must look for in AI-generated code
-- Checking for missing protections: validation steps, access checks, output encoding 
-- Architectural threat modeling before AI-assisted development begins 
-- Spotting hallucinated code and logic errors
+* Implementing secure coding practices and OWASP best practices
+* What reviewers must look for in AI-generated code
+* Checking for missing protections: validation steps, access checks, output encoding
+* Architectural threat modeling before AI-assisted development begins
+* Spotting hallucinated code and logic errors
 
 ### Module 7: Setting Up Your Environment Securely
 
-- Ensuring zero data retention with model providers 
-- Using enterprise agreements that prohibit training on your code 
-- Implementing context filtering to prevent sensitive code from reaching providers 
-- Self-hosted options for sensitive environments (Tabby, Azure AI, AWS Bedrock)
-- Network controls and data isolation
-- Access control and authentication
+* Ensuring zero data retention with model providers
+* Using enterprise agreements that prohibit training on your code
+* Implementing context filtering to prevent sensitive code from reaching providers
+* Self-hosted options for sensitive environments (Tabby, Azure AI, AWS Bedrock)
+* Network controls and data isolation
+* Access control and authentication
 
 ### Module 8: Measuring Success (Without Getting Fooled)
 
-- Why self-reported productivity gains are unreliable (developers overestimate by 20-24%)
-- Real metrics that matter: DORA metrics (deployment frequency, lead time, change failure rate, time to restore)
-- Tracking code quality: bugs, maintainability, readability
-- Security metrics: vulnerability introduction rate, time to patch
-- Developer satisfaction vs. actual productivity
-- When AI helps most: Junior developers and new hires benefit most
+* Why self-reported productivity gains are unreliable (developers overestimate by 20-24%)
+* Real metrics that matter: DORA metrics (deployment frequency, lead time, change failure rate, time to restore)
+* Tracking code quality: bugs, maintainability, readability
+* Security metrics: vulnerability introduction rate, time to patch
+* Developer satisfaction vs. actual productivity
+* When AI helps most: Junior developers and new hires benefit most
 
 ### Module 9: Real-World War Stories & Case Studies
 
-- Production incidents caused by AI-generated code
-- Case study: The eval() disaster - when AI suggests dangerous shortcuts
-- Supply chain compromise through AI-suggested vulnerable libraries
-- Data leaks from prompting AI with sensitive context
-- Success stories: Teams using AI safely at scale
-- What works, what doesn't in different contexts
+* Production incidents caused by AI-generated code
+* Case study: The eval() disaster - when AI suggests dangerous shortcuts
+* Supply chain compromise through AI-suggested vulnerable libraries
+* Data leaks from prompting AI with sensitive context
+* Success stories: Teams using AI safely at scale
+* What works, what doesn't in different contexts
 
 ### Module 10: Creating Your Rollout Plan
 
-- Treating AI code generation as a process challenge, not just a technology challenge
-- Pilot programs: Starting with junior developers or specific use cases
-- High-ROI starting points: Stack trace analysis, code refactoring, test generation
-- Change management: Getting buy-in from skeptical senior developers
-- Structured training programs on AI prompting (60% productivity loss without proper training)
-- Continuous feedback loops and iteration
+* Treating AI code generation as a process challenge, not just a technology challenge
+* Pilot programs: Starting with junior developers or specific use cases
+* High-ROI starting points: Stack trace analysis, code refactoring, test generation
+* Change management: Getting buy-in from skeptical senior developers
+* Structured training programs on AI prompting (60% productivity loss without proper training)
+* Continuous feedback loops and iteration

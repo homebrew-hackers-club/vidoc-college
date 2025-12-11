@@ -2,9 +2,7 @@
 title: The Productivity Paradox
 ---
 
-<AiVideo
-  script="You have probably heard bold claims that AI coding tools make developers ten times faster, but the reality is more nuanced. In some situations they really do feel like a superpower. When you are wiring up boilerplate endpoints, translating code between languages, or generating documentation and tests, assistants can cut the time in half and make the work less painful. Studies show clear speed and quality gains on well defined, repetitive tasks that live inside the current frontier of what AI is good at. But that same research also shows something more uncomfortable. On complex, open ended, or highly specialized tasks, people using AI can be slower and more wrong than those working without it. Junior developers may spend extra time wrestling with bad suggestions. Teams may ship code faster only to pay the price later in debugging, refactoring, and security fixes. There is also a hidden cost when AI does too much of the thinking for us: skills can atrophy, idea diversity can shrink, and onboarding becomes harder when nobody truly understands the generated code. So the productivity story is not simply faster or slower; it depends on task type, experience level, and how thoughtfully the tool is used. The key takeaways are that AI brings big gains on the right problems, mixed results on messy ones, and real long term tradeoffs you need to plan for."
-/>
+<AiVideo script="You have probably heard bold claims that AI coding tools make developers ten times faster, but the reality is more nuanced. In some situations they really do feel like a superpower. When you are wiring up boilerplate endpoints, translating code between languages, or generating documentation and tests, assistants can cut the time in half and make the work less painful. Studies show clear speed and quality gains on well defined, repetitive tasks that live inside the current frontier of what AI is good at. But that same research also shows something more uncomfortable. On complex, open ended, or highly specialized tasks, people using AI can be slower and more wrong than those working without it. Junior developers may spend extra time wrestling with bad suggestions. Teams may ship code faster only to pay the price later in debugging, refactoring, and security fixes. There is also a hidden cost when AI does too much of the thinking for us: skills can atrophy, idea diversity can shrink, and onboarding becomes harder when nobody truly understands the generated code. So the productivity story is not simply faster or slower; it depends on task type, experience level, and how thoughtfully the tool is used. The key takeaways are that AI brings big gains on the right problems, mixed results on messy ones, and real long term tradeoffs you need to plan for." id="c2f7c197d7af750a067b6aa9abf09b96f71013d8b56e11738aa09e9ee61231e9" />
 
 Here's the narrative so far: AI coding tools are incredibly popular (Chapter 1), they introduce serious security risks (Chapter 2), and banning them doesn't work (Chapter 3). So the path forward is managed adoption with proper guardrails.
 
@@ -18,9 +16,9 @@ Welcome to the productivity paradox.
 
 If you've read vendor marketing materials or early adopter testimonials, you've probably seen claims like:
 
-- "Developers are 10x more productive with AI"
-- "Cut development time in half"
-- "Ship features twice as fast"
+* "Developers are 10x more productive with AI"
+* "Cut development time in half"
+* "Ship features twice as fast"
 
 Some of these claims are based on real research. Others are based on selective metrics or self-reported data that doesn't hold up under scrutiny.
 
@@ -36,7 +34,7 @@ GitHub conducted rigorous research with professional developers. In surveys, dev
 
 Experience level matters significantly. Less experienced developers, developers with heavy coding loads (more hours of coding per day), and older developers (aged 25-44) benefited more from Copilot. When comparing performance improvements, bottom-half-skill performers exhibited a 43% surge in performance, compared to 17% for top-half-skill performers when leveraging AI.
 
-![Performance Gains by Skill Level](/assets/safe-productivity-perf-gain.png)
+![Performance Gains by Skill Level](https://raw.githubusercontent.com/homebrew-hackers-club/vidoc-college/refs/heads/main//assets/safe-productivity-perf-gain.png)
 *Performance Gains by Skill Level*
 
 There's a concerning gap between perception and reality. While participants using GitHub Copilot estimated a 35% increase in productivity on average, the actual revealed productivity increase was 55.8%, suggesting developers underestimated rather than overestimated the gains. However, other research shows the opposite pattern where developers overestimate gains, particularly when measuring overall project velocity rather than specific tasks, including complex work beyond AI's capabilities, or accounting for downstream costs like debugging and refactoring.
@@ -50,11 +48,12 @@ Based on the research, AI coding assistants genuinely boost productivity in spec
 Generative AI can handle routine tasks such as auto-filling standard functions used in coding, completing coding statements as the developer is typing, and documenting code functionality in a given standard format.
 
 **Use cases:**
-- CRUD operations
-- Standard API endpoints
-- Database schemas
-- Configuration files
-- Test fixtures
+
+* CRUD operations
+* Standard API endpoints
+* Database schemas
+* Configuration files
+* Test fixtures
 
 **Why it works:** These are pattern-matching tasks with minimal security or business logic complexity.
 
@@ -73,9 +72,10 @@ The technology can help developers rapidly brush up on an unfamiliar code base, 
 With the right upskilling and enterprise enablers, generative AI tools can help with code refactoring, which can enable leaders to make a dent in traditionally resource-intensive modernization efforts.
 
 **Use cases:**
-- Unit test generation
-- Test case scaffolding
-- Mock data creation
+
+* Unit test generation
+* Test case scaffolding
+* Mock data creation
 
 **✅ Documentation Generation**
 
@@ -98,10 +98,11 @@ There are scenarios where AI coding assistants make things worse:
 Research participants reported that AI tools won't know the specific needs of a given project and organization. Such knowledge is vital when coding to ensure the final software product can seamlessly integrate with other applications, meet a company's performance and security requirements, and ultimately solve end-user needs.
 
 **Why it fails:**
-- AI doesn't understand security intent
-- Missing security controls are common
-- AI reproduces vulnerable patterns from training data
-- The stakes are too high for trial-and-error
+
+* AI doesn't understand security intent
+* Missing security controls are common
+* AI reproduces vulnerable patterns from training data
+* The stakes are too high for trial-and-error
 
 **Example:** Authentication, authorization, cryptography, payment processing, access control
 
@@ -110,10 +111,11 @@ Research participants reported that AI tools won't know the specific needs of a 
 AI-based tools are better suited for answering simple prompts, such as optimizing a code snippet, than complicated ones, like combining multiple frameworks with disparate code logic. To obtain a usable solution to satisfy a multifaceted requirement, developers first had to either combine the components manually or break up the code into smaller segments.
 
 **Why it fails:**
-- AI doesn't understand your business requirements
-- Subtle edge cases get missed
-- Domain-specific rules aren't in training data
-- Logic errors are hard to spot in generated code
+
+* AI doesn't understand your business requirements
+* Subtle edge cases get missed
+* Domain-specific rules aren't in training data
+* Logic errors are hard to spot in generated code
 
 **❌ Tasks Requiring Human Oversight**
 
@@ -122,10 +124,11 @@ Participant feedback signaled three areas where human oversight and involvement 
 **❌ Novel Architecture or Design**
 
 Why it fails:
-- AI suggests common patterns, not innovative solutions
-- Architectural decisions require tradeoff analysis
-- System design needs holistic thinking
-- Copy-pasting patterns doesn't create good architecture
+
+* AI suggests common patterns, not innovative solutions
+* Architectural decisions require tradeoff analysis
+* System design needs holistic thinking
+* Copy-pasting patterns doesn't create good architecture
 
 ## The Hidden Costs and Realistic Expectations
 
@@ -136,22 +139,25 @@ An immediate danger emerging from these findings is that people will stop delega
 Based on comprehensive research, here are realistic productivity expectations:
 
 **Best Case Scenario — Well-defined, routine tasks within AI's frontier:**
-- **40-55% faster** on specific coding tasks
-- **12.2% more tasks completed** overall
-- **25.1% faster** task completion
-- **40%+ higher quality** outputs (when actively refined)
+
+* **40-55% faster** on specific coding tasks
+* **12.2% more tasks completed** overall
+* **25.1% faster** task completion
+* **40%+ higher quality** outputs (when actively refined)
 
 **Mixed Workload Scenario — Combination of simple and complex tasks:**
-- **Significant gains** on boilerplate and documentation
-- **Minimal to no gain** on complex logic and architecture
-- **Potential slowdowns** when AI suggestions require extensive validation
-- **Net gain varies widely** based on task mix (5-30% overall)
+
+* **Significant gains** on boilerplate and documentation
+* **Minimal to no gain** on complex logic and architecture
+* **Potential slowdowns** when AI suggestions require extensive validation
+* **Net gain varies widely** based on task mix (5-30% overall)
 
 **Problematic Scenario — Complex, outside-the-frontier work:**
-- **19 percentage points lower** correctness rate
-- **Faster initial work** but incorrect outcomes
-- **More time needed** to identify and fix issues
-- **Net result: Slower with worse quality**
+
+* **19 percentage points lower** correctness rate
+* **Faster initial work** but incorrect outcomes
+* **More time needed** to identify and fix issues
+* **Net result: Slower with worse quality**
 
 ## Measuring Success: Metrics and Collaboration Patterns
 
@@ -193,28 +199,28 @@ We've now covered the full context: why developers love AI (real productivity be
 
 Before moving on, make sure you understand these key takeaways:
 
-- AI provides up to 2x speed on simple, repetitive tasks (McKinsey)
-- Time savings shrink to less than 10% on complex tasks; junior developers may take 7-10% longer
-- AI users were 19% less likely to solve problems correctly when tasks fell outside AI's frontier (Harvard)
-- GitHub Copilot users completed specific tasks 55.8% faster in controlled experiments
-- Bottom-half performers gained 43% improvement vs. 17% for top-half performers
-- Benefits include reduced cognitive load and increased job satisfaction (60-75% of users)
-- Hidden costs include reduced idea diversity and potential training deficits
-- Best use cases: boilerplate, tests, documentation, learning, code refactoring
-- Worst use cases: security-critical code, complex business logic requiring organizational context
-- Success requires training, strategic use case selection, and ongoing measurement
-- Two effective collaboration patterns emerged: "Centaur" (division of labor) and "Cyborg" (tight integration)
+* AI provides up to 2x speed on simple, repetitive tasks (McKinsey)
+* Time savings shrink to less than 10% on complex tasks; junior developers may take 7-10% longer
+* AI users were 19% less likely to solve problems correctly when tasks fell outside AI's frontier (Harvard)
+* GitHub Copilot users completed specific tasks 55.8% faster in controlled experiments
+* Bottom-half performers gained 43% improvement vs. 17% for top-half performers
+* Benefits include reduced cognitive load and increased job satisfaction (60-75% of users)
+* Hidden costs include reduced idea diversity and potential training deficits
+* Best use cases: boilerplate, tests, documentation, learning, code refactoring
+* Worst use cases: security-critical code, complex business logic requiring organizational context
+* Success requires training, strategic use case selection, and ongoing measurement
+* Two effective collaboration patterns emerged: "Centaur" (division of labor) and "Cyborg" (tight integration)
 
----
+***
 
 ## Sources and Further Reading
 
-<a id="1">[1]</a> **McKinsey & Company (2023)** – [Unleashing developer productivity with generative AI](https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/unleashing-developer-productivity-with-generative-ai)
+<a id="1">\[1]</a> **McKinsey & Company (2023)** – [Unleashing developer productivity with generative AI](https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/unleashing-developer-productivity-with-generative-ai)
 
-<a id="2">[2]</a> **Dell'Acqua, F., et al. (2023)** – [Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of AI on Knowledge Worker Productivity and Quality](https://www.hbs.edu/ris/Publication%20Files/24-013_d9b45b68-9e74-42d6-a1c6-c72fb70c7282.pdf), Harvard Business School Working Paper 24-013
+<a id="2">\[2]</a> **Dell'Acqua, F., et al. (2023)** – [Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of AI on Knowledge Worker Productivity and Quality](https://www.hbs.edu/ris/Publication%20Files/24-013_d9b45b68-9e74-42d6-a1c6-c72fb70c7282.pdf), Harvard Business School Working Paper 24-013
 
-<a id="3">[3]</a> **Kalliamvakou, E. (2022)** – [Research: quantifying GitHub Copilot's impact on developer productivity and happiness](https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/), GitHub Blog
+<a id="3">\[3]</a> **Kalliamvakou, E. (2022)** – [Research: quantifying GitHub Copilot's impact on developer productivity and happiness](https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/), GitHub Blog
 
-<a id="4">[4]</a> **Peng, S., Kalliamvakou, E., Cihon, P., & Demirer, M. (2023)** – [The Impact of AI on Developer Productivity: Evidence from GitHub Copilot](https://arxiv.org/abs/2302.06590), arXiv:2302.06590
+<a id="4">\[4]</a> **Peng, S., Kalliamvakou, E., Cihon, P., & Demirer, M. (2023)** – [The Impact of AI on Developer Productivity: Evidence from GitHub Copilot](https://arxiv.org/abs/2302.06590), arXiv:2302.06590
 
-<a id="5">[5]</a> **GitLab (2024)** – [How AI helps DevSecOps teams improve productivity](https://about.gitlab.com/the-source/ai/how-ai-helps-devsecops-teams-improve-productivity/)
+<a id="5">\[5]</a> **GitLab (2024)** – [How AI helps DevSecOps teams improve productivity](https://about.gitlab.com/the-source/ai/how-ai-helps-devsecops-teams-improve-productivity/)
